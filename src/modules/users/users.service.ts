@@ -3,6 +3,7 @@ import { Model } from 'mongoose';
 import { UserDto } from './dto/create-user.dto';
 import { User } from './interfaces/user.interface';
 import { InjectTenancyModel } from '@needle-innovision/nestjs-tenancy';
+import { hash, compare } from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -11,15 +12,46 @@ export class UsersService {
   ) {}
 
   async findUserAndComparePassword(username: string, password: string) {
-    return this.userModel.findOne({ username });
+    const user = await this.userModel.findOne({ username }).select('+password');
+
+    if (!user) {
+      return false;
+    }
+
+    const isPasswordCorrect = await compare(password, user.password);
+
+    if (!isPasswordCorrect) {
+      return false;
+    }
+
+    return user;
   }
 
   async update(id: string, user: UserDto) {
-    return this.userModel.findOneAndUpdate({ _id: id }, user, { new: true });
+    const updatedUser = {
+      name: user.name,
+      username: user.username,
+      email: user.email,
+    };
+
+    if (user.password) {
+      updatedUser['password'] = await hash(user.password, 12);
+    }
+
+    return this.userModel.findOneAndUpdate({ _id: id }, updatedUser, {
+      new: true,
+    });
   }
 
-  async create(createUserDto: UserDto): Promise<User> {
-    return this.userModel.create(createUserDto);
+  async create(user: UserDto): Promise<User> {
+    const createdUser = {
+      name: user.name,
+      username: user.username,
+      email: user.email,
+      password: await hash(user.password, 12),
+    };
+
+    return this.userModel.create(createdUser);
   }
 
   async findAll(search: string, page = 1, limit = 20): Promise<User[]> {

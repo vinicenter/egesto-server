@@ -11,7 +11,6 @@ import {
 import { UsersService } from './users.service';
 import { User } from './interfaces/user.interface';
 import { UserDto } from './dto/create-user.dto';
-import { Public } from 'src/utils/globalDecorator';
 
 @Controller('users')
 export class UsersController {
@@ -31,7 +30,6 @@ export class UsersController {
     return this.userService.findOne(id);
   }
 
-  @Public()
   @Post()
   create(@Body() createUserDto: UserDto): Promise<User> {
     return this.userService.create(createUserDto);
