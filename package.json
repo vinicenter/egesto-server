@@ -29,6 +29,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "mongoose": "^7.3.1",
     "mongoose-bcrypt": "^1.10.1",
+    "mongoose-paginate-v2": "^1.7.1",
     "mongoose-zod": "^0.1.1",
     "nestjs-zod": "^2.3.3",
     "reflect-metadata": "^0.1.13",

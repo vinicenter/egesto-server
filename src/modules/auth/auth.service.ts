@@ -10,10 +10,15 @@ export class AuthService {
   ) {}
 
   async signIn(username: string, pass: string) {
-    const user = await this.usersService.findByUsername(username);
-    if (user?.password !== pass) {
+    const user = await this.usersService.findUserAndComparePassword(
+      username,
+      pass,
+    );
+
+    if (!user) {
       throw new UnauthorizedException();
     }
+
     const payload = { sub: user._id, username: user.username };
 
     return {

@@ -6,18 +6,24 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './interfaces/user.interface';
 import { UserDto } from './dto/create-user.dto';
+import { Public } from 'src/utils/globalDecorator';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
   @Get()
-  getUsers(): Promise<User[]> {
-    return this.userService.findAll();
+  getUsers(
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+    @Query('search') search: string,
+  ): Promise<User[]> {
+    return this.userService.findAll(search, page, limit);
   }
 
   @Get(':id')
@@ -25,6 +31,7 @@ export class UsersController {
     return this.userService.findOne(id);
   }
 
+  @Public()
   @Post()
   create(@Body() createUserDto: UserDto): Promise<User> {
     return this.userService.create(createUserDto);
