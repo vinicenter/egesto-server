@@ -10,6 +10,7 @@ import { UsersModule } from '../modules/users/users.module';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { APP_PIPE } from '@nestjs/core';
 import { TenancyModule } from '@needle-innovision/nestjs-tenancy';
+import { PeopleModule } from 'src/modules/people/people.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { TenancyModule } from '@needle-innovision/nestjs-tenancy';
       },
     }),
     UsersModule,
+    PeopleModule,
     AuthModule,
     ConfigModule.forRoot(),
   ],
