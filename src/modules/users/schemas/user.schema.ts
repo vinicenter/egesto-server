@@ -18,4 +18,4 @@ export const UserMongooseSchema = toMongooseSchema(UserSchemaZodMongoose);
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 UserMongooseSchema.plugin(require('mongoose-paginate-v2'));
 
-export const UserModel = mongoose.model('User', UserMongooseSchema);
+export const UserModel = mongoose.model('USER_MODEL', UserMongooseSchema);

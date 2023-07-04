@@ -1,6 +1,9 @@
 import mongoose from 'mongoose';
 import { z } from 'nestjs-zod/z';
 import { toMongooseSchema } from 'mongoose-zod';
+import { brazilianStates } from '../../../constants/states';
+
+const states = brazilianStates.map((state) => state.value);
 
 export const PersonSchema = z.object({
   document: z.string().min(11).max(14),
@@ -17,7 +20,7 @@ export const PersonSchema = z.object({
       number: z.string().optional(),
       neighborhood: z.string().optional(),
       city: z.string().optional(),
-      federativeUnit: z.string().min(0).max(2).optional(),
+      federativeUnit: z.string().refine((value) => states.includes(value)),
       zipCode: z.string().optional(),
     })
     .optional(),
@@ -32,4 +35,4 @@ export const PersonMongooseSchema = toMongooseSchema(PersonSchemaZodMongoose);
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 PersonMongooseSchema.plugin(require('mongoose-paginate-v2'));
 
-export const PeopleModel = mongoose.model('People', PersonMongooseSchema);
+export const PeopleModel = mongoose.model('PEOPLE_MODEL', PersonMongooseSchema);

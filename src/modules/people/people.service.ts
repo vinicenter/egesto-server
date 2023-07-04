@@ -45,10 +45,6 @@ export class PeopleService {
     return this.peopleModel.findById(id);
   }
 
-  async findByUsername(username: string): Promise<People> {
-    return this.peopleModel.findOne({ username });
-  }
-
   async delete(id: string): Promise<People> {
     return this.peopleModel.findOneAndDelete({ _id: id });
   }

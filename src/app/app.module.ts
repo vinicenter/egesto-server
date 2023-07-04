@@ -6,11 +6,14 @@ import { AppService } from './app.service';
 
 import { AuthModule } from '../modules/auth/auth.module';
 import { UsersModule } from '../modules/users/users.module';
+import { PeopleModule } from 'src/modules/people/people.module';
+import { BrandsModule } from 'src/modules/brands/brands.module';
+import { FeedstockModule } from 'src/modules/feedstock/feedstock.module';
 
 import { ZodValidationPipe } from 'nestjs-zod';
 import { APP_PIPE } from '@nestjs/core';
 import { TenancyModule } from '@needle-innovision/nestjs-tenancy';
-import { PeopleModule } from 'src/modules/people/people.module';
+import mongoose from 'mongoose';
 
 @Module({
   imports: [
@@ -19,12 +22,18 @@ import { PeopleModule } from 'src/modules/people/people.module';
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       options: () => {},
       uri: (tenantId: string) => {
-        return process.env.MONGO_URI + `/${tenantId}?authSource=admin`;
+        const uri = process.env.MONGO_URI + `/${tenantId}?authSource=admin`;
+
+        // mongoose.connect(uri);
+
+        return uri;
       },
     }),
     UsersModule,
     PeopleModule,
     AuthModule,
+    BrandsModule,
+    FeedstockModule,
     ConfigModule.forRoot(),
   ],
   controllers: [AppController],
