@@ -31,7 +31,7 @@ export class FeedStockController {
   }
 
   @Post()
-  create(@Body() createUserDto: any): Promise<FeedStock> {
+  create(@Body() createUserDto: FeedStockDto): Promise<FeedStock> {
     return this.feedStockService.create(createUserDto);
   }
 
