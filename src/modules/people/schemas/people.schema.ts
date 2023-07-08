@@ -5,8 +5,17 @@ import { brazilianStates } from '../../../constants/states';
 
 const states = brazilianStates.map((state) => state.value);
 
+const cnpjCpfRegex = new RegExp(
+  /([0-9]{2}[\.]?[0-9]{3}[\.]?[0-9]{3}[\/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2})/,
+);
+
 export const PersonSchema = z.object({
-  document: z.string().min(11).max(14),
+  document: z
+    .string()
+    .max(18)
+    .refine((value) => {
+      return cnpjCpfRegex.test(value);
+    }, 'Invalid document'),
   stateRegistration: z.string().min(0).max(13).optional(),
   corporateName: z.string(),
   fantasyName: z.string(),
