@@ -7,7 +7,7 @@ export const FeedStockSchema = z.object({
   price: z.number(),
   icms: z.number(),
   priceWithoutIcms: z.number(),
-  ncm: z.string(),
+  ncm: z.string().optional(),
   brand: z
     .string()
     .refine((val) => {
@@ -15,7 +15,8 @@ export const FeedStockSchema = z.object({
     })
     .mongooseTypeOptions({
       ref: 'BRAND_MODEL',
-    }),
+    })
+    .optional(),
 });
 
 const FeedStockSchemaZodMongoose = FeedStockSchema.mongoose({

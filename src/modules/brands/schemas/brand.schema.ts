@@ -4,7 +4,7 @@ import { toMongooseSchema } from 'mongoose-zod';
 
 export const BrandSchema = z.object({
   name: z.string(),
-  description: z.string(),
+  description: z.string().optional(),
 });
 
 const BrandSchemaZodMongoose = BrandSchema.mongoose({
