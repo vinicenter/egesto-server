@@ -6,7 +6,6 @@ export const FeedStockSchema = z.object({
   name: z.string(),
   price: z.number(),
   icms: z.number(),
-  priceWithoutIcms: z.number(),
   ncm: z.string().optional(),
   brand: z
     .string()
@@ -26,6 +25,12 @@ const FeedStockSchemaZodMongoose = FeedStockSchema.mongoose({
 export const FeedStockMongooseSchema = toMongooseSchema(
   FeedStockSchemaZodMongoose,
 );
+
+FeedStockMongooseSchema.virtual('priceWithoutIcms').get(function () {
+  return this.price * (1 - this.icms / 100);
+});
+
+FeedStockMongooseSchema.set('toJSON', { virtuals: true });
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 FeedStockMongooseSchema.plugin(require('mongoose-paginate-v2'));
