@@ -10,7 +10,8 @@ import {
 } from '@nestjs/common';
 import { FeedStockService } from './feedstock.service';
 import { FeedStock } from './interfaces/feedstock.interface';
-import { FeedStockDto } from './dto/create-feedstock.dto';
+import { CreateFeedStockDto } from './dto/create-feedstock.dto';
+import { UpdateFeedStockDto } from './dto/update-feedstock.dto';
 
 @Controller('feedstocks')
 export class FeedStockController {
@@ -31,13 +32,13 @@ export class FeedStockController {
   }
 
   @Post()
-  create(@Body() data: FeedStockDto): Promise<FeedStock> {
+  create(@Body() data: CreateFeedStockDto): Promise<FeedStock> {
     return this.feedStockService.create(data);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() createUserDto: FeedStockDto) {
-    return this.feedStockService.update(id, createUserDto);
+  update(@Param('id') id: string, @Body() data: UpdateFeedStockDto) {
+    return this.feedStockService.update(id, data);
   }
 
   @Delete(':id')

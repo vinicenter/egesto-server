@@ -1,9 +1,9 @@
 import { InjectTenancyModel } from '@needle-innovision/nestjs-tenancy';
 import { Injectable } from '@nestjs/common';
-import { Brand } from '../brands/interfaces/brands.interface';
 import { FeedStock } from './interfaces/feedstock.interface';
 import { Model } from 'mongoose';
-import { FeedStockDto } from './dto/create-feedstock.dto';
+import { CreateFeedStockDto } from './dto/create-feedstock.dto';
+import { UpdateFeedStockDto } from './dto/update-feedstock.dto';
 
 @Injectable()
 export class FeedStockService {
@@ -12,13 +12,13 @@ export class FeedStockService {
     private readonly feedStockModel: Model<FeedStock>,
   ) {}
 
-  async update(id: string, feedStock: FeedStockDto): Promise<FeedStock> {
+  async update(id: string, feedStock: UpdateFeedStockDto): Promise<FeedStock> {
     return this.feedStockModel.findOneAndUpdate({ _id: id }, feedStock, {
       new: true,
     });
   }
 
-  async create(feedStock: FeedStockDto): Promise<FeedStock> {
+  async create(feedStock: CreateFeedStockDto): Promise<FeedStock> {
     return this.feedStockModel.create(feedStock);
   }
 
