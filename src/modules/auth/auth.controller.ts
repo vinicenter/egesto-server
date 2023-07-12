@@ -7,6 +7,7 @@ import {
   UseGuards,
   Get,
   Request,
+  Headers,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
@@ -20,8 +21,12 @@ export class AuthController {
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() loginDto: LoginDto) {
-    return this.authService.signIn(loginDto.username, loginDto.password);
+  signIn(@Body() loginDto: LoginDto, @Headers() headers) {
+    return this.authService.signIn(
+      loginDto.username,
+      loginDto.password,
+      headers['x-tenant'],
+    );
   }
 
   @UseGuards(AuthGuard)
