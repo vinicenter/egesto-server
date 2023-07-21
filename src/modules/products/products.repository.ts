@@ -14,8 +14,6 @@ export const calculateTotalCost = (product: ProductModelType) => {
     return (acc = acc + (curr?.considerInWeightCalculation ? curr.value : 0));
   }, 0);
 
-  console.log(formulationCost, weight, product.unit.weight);
-
   const productCost = (formulationCost / weight) * product.unit.weight;
 
   return {
