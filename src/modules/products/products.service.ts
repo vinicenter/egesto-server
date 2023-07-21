@@ -34,7 +34,14 @@ export class ProductService {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const data = this.productModel.paginate(
-      search ? { $or: [{ name: { $regex: search, $options: 'i' } }] } : {},
+      search
+        ? {
+            $or: [
+              { name: { $regex: search, $options: 'i' } },
+              { code: { $regex: search, $options: 'i' } },
+            ],
+          }
+        : {},
       {
         page,
         limit,
