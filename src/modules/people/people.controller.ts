@@ -9,7 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { PeopleService } from './people.service';
-import { People } from './interfaces/user.interface';
+import { People } from './interfaces/people.interface';
 import { PeopleDto } from './dto/create-people.dto';
 
 @Controller('people')

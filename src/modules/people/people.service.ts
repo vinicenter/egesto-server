@@ -1,6 +1,6 @@
 import { InjectTenancyModel } from '@needle-innovision/nestjs-tenancy';
 import { Injectable } from '@nestjs/common';
-import { People } from './interfaces/user.interface';
+import { People } from './interfaces/people.interface';
 import { Model } from 'mongoose';
 import { PeopleDto } from './dto/create-people.dto';
 
