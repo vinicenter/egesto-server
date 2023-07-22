@@ -4,6 +4,7 @@ import { FeedStock } from './interfaces/feedstock.interface';
 import { Model } from 'mongoose';
 import { CreateFeedStockDto } from './dto/create-feedstock.dto';
 import { UpdateFeedStockDto } from './dto/update-feedstock.dto';
+import { PaginatorDto } from 'src/utils/paginator/dto/paginator.dto';
 
 @Injectable()
 export class FeedStockService {
@@ -22,7 +23,9 @@ export class FeedStockService {
     return this.feedStockModel.create(feedStock);
   }
 
-  async findAll(search: string, page = 1, limit = 20): Promise<FeedStock[]> {
+  async findAll(queryParams: PaginatorDto): Promise<FeedStock[]> {
+    const { limit, page, search } = queryParams;
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return this.feedStockModel.paginate(

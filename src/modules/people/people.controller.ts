@@ -11,22 +11,19 @@ import {
 import { PeopleService } from './people.service';
 import { People } from './interfaces/people.interface';
 import { PeopleDto } from './dto/create-people.dto';
+import { PaginatorDto } from 'src/utils/paginator/dto/paginator.dto';
 
 @Controller('people')
 export class PeopleController {
   constructor(private readonly peopleService: PeopleService) {}
 
   @Get()
-  getPeople(
-    @Query('page') page: number,
-    @Query('limit') limit: number,
-    @Query('search') search: string,
-  ): Promise<People[]> {
-    return this.peopleService.findAll(search, page, limit);
+  getAll(@Query() queryParams: PaginatorDto): Promise<People[]> {
+    return this.peopleService.findAll(queryParams);
   }
 
   @Get(':id')
-  getUser(@Param('id') id: string): Promise<People> {
+  get(@Param('id') id: string): Promise<People> {
     return this.peopleService.findOne(id);
   }
 

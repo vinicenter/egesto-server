@@ -12,6 +12,7 @@ import { ProductService } from './products.service';
 import { ProductModelType, ProductType } from './interfaces/product.interface';
 import { ProductCreateDto } from './dto/create-product.dto';
 import { ProductUpdateDto } from './dto/update-product.dto';
+import { ProductPaginateDto } from './dto/paginator-product.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -19,11 +20,9 @@ export class ProductsController {
 
   @Get()
   getAll(
-    @Query('page') page: number,
-    @Query('limit') limit: number,
-    @Query('search') search: string,
+    @Query() queryParams: ProductPaginateDto,
   ): Promise<ProductModelType[]> {
-    return this.productService.findAll(search, page, limit);
+    return this.productService.findAll(queryParams);
   }
 
   @Get(':id')

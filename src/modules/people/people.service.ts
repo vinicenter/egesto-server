@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { People } from './interfaces/people.interface';
 import { Model } from 'mongoose';
 import { PeopleDto } from './dto/create-people.dto';
+import { PaginatorDto } from 'src/utils/paginator/dto/paginator.dto';
 
 @Injectable()
 export class PeopleService {
@@ -21,7 +22,9 @@ export class PeopleService {
     return this.peopleModel.create(people);
   }
 
-  async findAll(search: string, page = 1, limit = 20): Promise<People[]> {
+  async findAll(queryParams: PaginatorDto): Promise<People[]> {
+    const { limit, page, search } = queryParams;
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return this.peopleModel.paginate(

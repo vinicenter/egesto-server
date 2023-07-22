@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { z } from 'nestjs-zod/z';
+import { PaginatorSchema } from 'src/utils/paginator/schemas/paginator.schema';
 
 export const ProductModelSchema = z.object({
   name: z.string(),
@@ -71,5 +72,13 @@ export const ProductSchema = ProductModelSchema.and(
         weightPerFormulation: z.number(),
       }),
     }),
+  }),
+);
+
+export const ProductPaginatorSchema = PaginatorSchema.and(
+  z.object({
+    feedstockId: z.string().optional(),
+    brandId: z.string().optional(),
+    familyId: z.string().optional(),
   }),
 );

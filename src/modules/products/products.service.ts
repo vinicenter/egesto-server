@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { ProductCreateDto } from './dto/create-product.dto';
 import { ProductUpdateDto } from './dto/update-product.dto';
 import { calculateTotalCost } from './products.repository';
+import { ProductPaginateDto } from './dto/paginator-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -26,38 +27,47 @@ export class ProductService {
     return this.productModel.create(product);
   }
 
-  async findAll(
-    search: string,
-    page = 1,
-    limit = 20,
-  ): Promise<ProductModelType[]> {
+  async findAll(queryParams: ProductPaginateDto): Promise<ProductModelType[]> {
+    const { brandId, familyId, feedstockId, limit, page, search } = queryParams;
+
+    const query = {};
+
+    if (feedstockId) {
+      query['production.formulation.feedstock'] = feedstockId;
+    }
+
+    if (brandId) {
+      query['brand'] = brandId;
+    }
+
+    if (familyId) {
+      query['family'] = familyId;
+    }
+
+    if (search) {
+      query['$or'] = [
+        { name: { $regex: search, $options: 'i' } },
+        { code: { $regex: search, $options: 'i' } },
+      ];
+    }
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const data = this.productModel.paginate(
-      search
-        ? {
-            $or: [
-              { name: { $regex: search, $options: 'i' } },
-              { code: { $regex: search, $options: 'i' } },
-            ],
-          }
-        : {},
-      {
-        page,
-        limit,
-        populate: [
-          'brand',
-          'family',
-          {
-            path: 'production',
-            populate: {
-              path: 'formulation',
-              populate: 'feedstock',
-            },
+    const data = this.productModel.paginate(query, {
+      page,
+      limit,
+      populate: [
+        'brand',
+        'family',
+        {
+          path: 'production',
+          populate: {
+            path: 'formulation',
+            populate: 'feedstock',
           },
-        ],
-      },
-    );
+        },
+      ],
+    });
 
     return data;
   }
