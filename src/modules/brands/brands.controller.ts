@@ -19,7 +19,7 @@ export class BrandsController {
 
   @Get()
   getAll(@Query() queryParams: PaginatorDto): Promise<Brand[]> {
-    return this.brandsService.findAll(queryParams);
+    return this.brandsService.paginate(queryParams);
   }
 
   @Get(':id')

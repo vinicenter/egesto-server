@@ -55,7 +55,7 @@ export class UsersService {
     return this.userModel.create(createdUser);
   }
 
-  async findAll(queryParams: PaginatorDto): Promise<User[]> {
+  async paginate(queryParams: PaginatorDto): Promise<User[]> {
     const { limit, page, search } = queryParams;
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment

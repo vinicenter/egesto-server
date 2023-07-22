@@ -23,7 +23,7 @@ export class FeedStockService {
     return this.feedStockModel.create(feedStock);
   }
 
-  async findAll(queryParams: PaginatorDto): Promise<FeedStock[]> {
+  async paginate(queryParams: PaginatorDto): Promise<FeedStock[]> {
     const { limit, page, search } = queryParams;
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment

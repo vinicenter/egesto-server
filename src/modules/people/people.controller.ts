@@ -19,7 +19,7 @@ export class PeopleController {
 
   @Get()
   getAll(@Query() queryParams: PaginatorDto): Promise<People[]> {
-    return this.peopleService.findAll(queryParams);
+    return this.peopleService.paginate(queryParams);
   }
 
   @Get(':id')

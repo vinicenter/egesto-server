@@ -22,7 +22,7 @@ export class ProductsController {
   getAll(
     @Query() queryParams: ProductPaginateDto,
   ): Promise<ProductModelType[]> {
-    return this.productService.findAll(queryParams);
+    return this.productService.paginate(queryParams);
   }
 
   @Get(':id')

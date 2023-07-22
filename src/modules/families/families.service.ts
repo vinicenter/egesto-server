@@ -22,7 +22,7 @@ export class FamilyService {
     return this.familyModel.create(feedStock);
   }
 
-  async findAll(queryParams: PaginatorDto): Promise<Family[]> {
+  async paginate(queryParams: PaginatorDto): Promise<Family[]> {
     const { page, limit, search } = queryParams;
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment

@@ -27,7 +27,7 @@ export class ProductService {
     return this.productModel.create(product);
   }
 
-  async findAll(queryParams: ProductPaginateDto): Promise<ProductModelType[]> {
+  async paginate(queryParams: ProductPaginateDto): Promise<ProductModelType[]> {
     const { brandId, familyId, feedstockId, limit, page, search } = queryParams;
 
     const query = {};

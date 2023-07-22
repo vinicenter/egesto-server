@@ -22,7 +22,7 @@ export class PeopleService {
     return this.peopleModel.create(people);
   }
 
-  async findAll(queryParams: PaginatorDto): Promise<People[]> {
+  async paginate(queryParams: PaginatorDto): Promise<People[]> {
     const { limit, page, search } = queryParams;
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment

@@ -20,7 +20,7 @@ export class FeedStockController {
 
   @Get()
   getAll(@Query() queryParams: PaginatorDto): Promise<FeedStock[]> {
-    return this.feedStockService.findAll(queryParams);
+    return this.feedStockService.paginate(queryParams);
   }
 
   @Get(':id')

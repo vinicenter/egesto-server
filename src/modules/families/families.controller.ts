@@ -19,7 +19,7 @@ export class FamilyController {
 
   @Get()
   getAll(@Query() queryParams: PaginatorDto): Promise<Family[]> {
-    return this.familyService.findAll(queryParams);
+    return this.familyService.paginate(queryParams);
   }
 
   @Get(':id')

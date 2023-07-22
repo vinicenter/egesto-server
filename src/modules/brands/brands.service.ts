@@ -22,7 +22,7 @@ export class BrandsService {
     return this.brandModel.create(brand);
   }
 
-  async findAll(queryParams: PaginatorDto): Promise<Brand[]> {
+  async paginate(queryParams: PaginatorDto): Promise<Brand[]> {
     const { page, limit, search } = queryParams;
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
