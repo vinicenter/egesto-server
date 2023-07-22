@@ -4,6 +4,7 @@ import { Family } from './interfaces/families.interface';
 import { Model } from 'mongoose';
 import { FamilyDto } from './dto/create-families.dto';
 import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
+import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 
 @Injectable()
 export class FamilyService {
