@@ -6,6 +6,7 @@ import { ProductCreateDto } from './dto/create-product.dto';
 import { ProductUpdateDto } from './dto/update-product.dto';
 import { calculateTotalCost } from './products.repository';
 import { ProductPaginateDto } from './dto/paginator-product.dto';
+import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 
 @Injectable()
 export class ProductService {
@@ -27,7 +28,7 @@ export class ProductService {
     return this.productModel.create(product);
   }
 
-  async paginate(queryParams: ProductPaginateDto): Promise<ProductModelType[]> {
+  async paginate(queryParams: ProductPaginateDto) {
     const { brandId, familyId, feedstockId, limit, page, search } = queryParams;
 
     const query = {};
@@ -67,7 +68,7 @@ export class ProductService {
           },
         },
       ],
-    });
+    }) as Promise<PaginatorInterface<ProductModelType>>;
 
     return data;
   }

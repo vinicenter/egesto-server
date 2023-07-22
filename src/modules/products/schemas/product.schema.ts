@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { z } from 'nestjs-zod/z';
-import { PaginatorSchema } from 'src/utils/paginator/schemas/paginator.schema';
+import { PaginatorSchema } from 'src/utils/paginator/paginator.schema';
 
 export const ProductModelSchema = z.object({
   name: z.string(),

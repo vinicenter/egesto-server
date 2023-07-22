@@ -11,14 +11,17 @@ import {
 import { UsersService } from './users.service';
 import { User } from './interfaces/user.interface';
 import { UserDto } from './dto/create-user.dto';
-import { PaginatorDto } from 'src/utils/paginator/dto/paginator.dto';
+import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
+import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
   @Get()
-  getAll(@Query() queryParams: PaginatorDto): Promise<User[]> {
+  getAll(
+    @Query() queryParams: PaginatorDto,
+  ): Promise<PaginatorInterface<User>> {
     return this.userService.paginate(queryParams);
   }
 

@@ -11,14 +11,17 @@ import {
 import { FamilyService } from './families.service';
 import { Family } from './interfaces/families.interface';
 import { FamilyDto } from './dto/create-families.dto';
-import { PaginatorDto } from 'src/utils/paginator/dto/paginator.dto';
+import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
+import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 
 @Controller('families')
 export class FamilyController {
   constructor(private readonly familyService: FamilyService) {}
 
   @Get()
-  getAll(@Query() queryParams: PaginatorDto): Promise<Family[]> {
+  getAll(
+    @Query() queryParams: PaginatorDto,
+  ): Promise<PaginatorInterface<Family>> {
     return this.familyService.paginate(queryParams);
   }
 

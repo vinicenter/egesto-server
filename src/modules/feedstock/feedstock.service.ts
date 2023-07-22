@@ -4,7 +4,8 @@ import { FeedStock } from './interfaces/feedstock.interface';
 import { Model } from 'mongoose';
 import { CreateFeedStockDto } from './dto/create-feedstock.dto';
 import { UpdateFeedStockDto } from './dto/update-feedstock.dto';
-import { PaginatorDto } from 'src/utils/paginator/dto/paginator.dto';
+import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
+import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 
 @Injectable()
 export class FeedStockService {
@@ -23,7 +24,9 @@ export class FeedStockService {
     return this.feedStockModel.create(feedStock);
   }
 
-  async paginate(queryParams: PaginatorDto): Promise<FeedStock[]> {
+  async paginate(
+    queryParams: PaginatorDto,
+  ): Promise<PaginatorInterface<FeedStock>> {
     const { limit, page, search } = queryParams;
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment

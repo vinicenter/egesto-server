@@ -11,14 +11,17 @@ import {
 import { PeopleService } from './people.service';
 import { People } from './interfaces/people.interface';
 import { PeopleDto } from './dto/create-people.dto';
-import { PaginatorDto } from 'src/utils/paginator/dto/paginator.dto';
+import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
+import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 
 @Controller('people')
 export class PeopleController {
   constructor(private readonly peopleService: PeopleService) {}
 
   @Get()
-  getAll(@Query() queryParams: PaginatorDto): Promise<People[]> {
+  getAll(
+    @Query() queryParams: PaginatorDto,
+  ): Promise<PaginatorInterface<People>> {
     return this.peopleService.paginate(queryParams);
   }
 

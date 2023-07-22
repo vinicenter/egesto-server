@@ -11,14 +11,17 @@ import {
 import { Brand } from './interfaces/brands.interface';
 import { BrandDto } from './dto/create-brand.dto';
 import { BrandsService } from './brands.service';
-import { PaginatorDto } from 'src/utils/paginator/dto/paginator.dto';
+import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
+import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 
 @Controller('brands')
 export class BrandsController {
   constructor(private readonly brandsService: BrandsService) {}
 
   @Get()
-  getAll(@Query() queryParams: PaginatorDto): Promise<Brand[]> {
+  getAll(
+    @Query() queryParams: PaginatorDto,
+  ): Promise<PaginatorInterface<Brand>> {
     return this.brandsService.paginate(queryParams);
   }
 

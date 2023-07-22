@@ -13,6 +13,7 @@ import { ProductModelType, ProductType } from './interfaces/product.interface';
 import { ProductCreateDto } from './dto/create-product.dto';
 import { ProductUpdateDto } from './dto/update-product.dto';
 import { ProductPaginateDto } from './dto/paginator-product.dto';
+import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 
 @Controller('products')
 export class ProductsController {
@@ -21,7 +22,7 @@ export class ProductsController {
   @Get()
   getAll(
     @Query() queryParams: ProductPaginateDto,
-  ): Promise<ProductModelType[]> {
+  ): Promise<PaginatorInterface<ProductModelType>> {
     return this.productService.paginate(queryParams);
   }
 
