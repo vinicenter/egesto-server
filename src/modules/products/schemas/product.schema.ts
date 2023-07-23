@@ -4,8 +4,8 @@ import { PaginatorSchema } from 'src/utils/paginator/paginator.schema';
 
 export const ProductModelSchema = z.object({
   name: z.string(),
-  code: z.string().mongooseTypeOptions({ unique: true }),
-  UnitOfMeasurement: z.string().max(3),
+  code: z.string().mongooseTypeOptions({ unique: true }).optional(),
+  UnitOfMeasurement: z.string().max(3).optional(),
   pack: z.object({
     numberOfUnitsInPack: z.number(),
     numberOfPacksInPallet: z.number().optional(),
