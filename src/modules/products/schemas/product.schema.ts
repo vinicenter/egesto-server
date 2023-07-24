@@ -4,7 +4,7 @@ import { PaginatorSchema } from 'src/utils/paginator/paginator.schema';
 
 export const ProductModelSchema = z.object({
   name: z.string(),
-  code: z.string().mongooseTypeOptions({ unique: true }).optional(),
+  code: z.string().mongooseTypeOptions({ unique: true }),
   UnitOfMeasurement: z.string().max(3).optional(),
   pack: z.object({
     numberOfUnitsInPack: z.number(),
@@ -33,8 +33,7 @@ export const ProductModelSchema = z.object({
             feedstock: z
               .string()
               .refine((val) => mongoose.Types.ObjectId.isValid(val))
-              .mongooseTypeOptions({ ref: 'FEEDSTOCK_MODEL' })
-              .nullish(),
+              .mongooseTypeOptions({ ref: 'FEEDSTOCK_MODEL' }),
             value: z.number(),
             considerInWeightCalculation: z.boolean(),
           })
