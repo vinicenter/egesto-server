@@ -3,6 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { Family } from './interfaces/families.interface';
 import { Model } from 'mongoose';
 import { FamilyDto } from './dto/create-families.dto';
+import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
+import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 
 @Injectable()
 export class FamilyService {
@@ -21,7 +23,11 @@ export class FamilyService {
     return this.familyModel.create(feedStock);
   }
 
-  async findAll(search: string, page = 1, limit = 20): Promise<Family[]> {
+  async paginate(
+    queryParams: PaginatorDto,
+  ): Promise<PaginatorInterface<Family>> {
+    const { page, limit, search } = queryParams;
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return this.familyModel.paginate(

@@ -11,22 +11,22 @@ import {
 import { Brand } from './interfaces/brands.interface';
 import { BrandDto } from './dto/create-brand.dto';
 import { BrandsService } from './brands.service';
+import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
+import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 
 @Controller('brands')
 export class BrandsController {
   constructor(private readonly brandsService: BrandsService) {}
 
   @Get()
-  getBrands(
-    @Query('page') page: number,
-    @Query('limit') limit: number,
-    @Query('search') search: string,
-  ): Promise<Brand[]> {
-    return this.brandsService.findAll(search, page, limit);
+  getAll(
+    @Query() queryParams: PaginatorDto,
+  ): Promise<PaginatorInterface<Brand>> {
+    return this.brandsService.paginate(queryParams);
   }
 
   @Get(':id')
-  getUser(@Param('id') id: string): Promise<Brand> {
+  get(@Param('id') id: string): Promise<Brand> {
     return this.brandsService.findOne(id);
   }
 

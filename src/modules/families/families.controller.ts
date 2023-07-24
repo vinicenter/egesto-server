@@ -11,18 +11,18 @@ import {
 import { FamilyService } from './families.service';
 import { Family } from './interfaces/families.interface';
 import { FamilyDto } from './dto/create-families.dto';
+import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
+import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 
 @Controller('families')
 export class FamilyController {
   constructor(private readonly familyService: FamilyService) {}
 
   @Get()
-  list(
-    @Query('page') page: number,
-    @Query('limit') limit: number,
-    @Query('search') search: string,
-  ): Promise<Family[]> {
-    return this.familyService.findAll(search, page, limit);
+  getAll(
+    @Query() queryParams: PaginatorDto,
+  ): Promise<PaginatorInterface<Family>> {
+    return this.familyService.paginate(queryParams);
   }
 
   @Get(':id')

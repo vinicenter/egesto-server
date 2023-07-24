@@ -4,6 +4,8 @@ import { UserDto } from './dto/create-user.dto';
 import { User } from './interfaces/user.interface';
 import { InjectTenancyModel } from '@needle-innovision/nestjs-tenancy';
 import { hash, compare } from 'bcrypt';
+import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
+import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 
 @Injectable()
 export class UsersService {
@@ -54,7 +56,9 @@ export class UsersService {
     return this.userModel.create(createdUser);
   }
 
-  async findAll(search: string, page = 1, limit = 20): Promise<User[]> {
+  async paginate(queryParams: PaginatorDto) {
+    const { limit, page, search } = queryParams;
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return this.userModel.paginate(
@@ -71,7 +75,7 @@ export class UsersService {
         page,
         limit,
       },
-    );
+    ) as Promise<PaginatorInterface<User>>;
   }
 
   async findOne(id: string): Promise<User> {

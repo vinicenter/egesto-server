@@ -10,6 +10,7 @@ import { PeopleModule } from 'src/modules/people/people.module';
 import { BrandsModule } from 'src/modules/brands/brands.module';
 import { FeedstockModule } from 'src/modules/feedstock/feedstock.module';
 import { FamiliesModule } from 'src/modules/families/families.module';
+import { ProdutModule } from 'src/modules/products/products.module';
 
 import { ZodValidationPipe } from 'nestjs-zod';
 import { APP_PIPE } from '@nestjs/core';
@@ -35,6 +36,7 @@ import { TenancyModule } from '@needle-innovision/nestjs-tenancy';
     BrandsModule,
     FeedstockModule,
     FamiliesModule,
+    ProdutModule,
     ConfigModule.forRoot(),
   ],
   controllers: [AppController],

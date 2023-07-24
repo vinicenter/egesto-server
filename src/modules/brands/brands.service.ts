@@ -3,6 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { Brand } from './interfaces/brands.interface';
 import { BrandDto } from './dto/create-brand.dto';
+import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
+import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 
 @Injectable()
 export class BrandsService {
@@ -21,7 +23,11 @@ export class BrandsService {
     return this.brandModel.create(brand);
   }
 
-  async findAll(search: string, page = 1, limit = 20): Promise<Brand[]> {
+  async paginate(
+    queryParams: PaginatorDto,
+  ): Promise<PaginatorInterface<Brand>> {
+    const { page, limit, search } = queryParams;
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return this.brandModel.paginate(

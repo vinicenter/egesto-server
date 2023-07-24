@@ -31,6 +31,7 @@ FeedStockMongooseSchema.virtual('priceWithoutIcms').get(function () {
 });
 
 FeedStockMongooseSchema.set('toJSON', { virtuals: true });
+FeedStockMongooseSchema.set('toObject', { virtuals: true });
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 FeedStockMongooseSchema.plugin(require('mongoose-paginate-v2'));

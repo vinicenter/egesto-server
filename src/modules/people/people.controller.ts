@@ -9,24 +9,24 @@ import {
   Query,
 } from '@nestjs/common';
 import { PeopleService } from './people.service';
-import { People } from './interfaces/user.interface';
+import { People } from './interfaces/people.interface';
 import { PeopleDto } from './dto/create-people.dto';
+import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
+import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 
 @Controller('people')
 export class PeopleController {
   constructor(private readonly peopleService: PeopleService) {}
 
   @Get()
-  getPeople(
-    @Query('page') page: number,
-    @Query('limit') limit: number,
-    @Query('search') search: string,
-  ): Promise<People[]> {
-    return this.peopleService.findAll(search, page, limit);
+  getAll(
+    @Query() queryParams: PaginatorDto,
+  ): Promise<PaginatorInterface<People>> {
+    return this.peopleService.paginate(queryParams);
   }
 
   @Get(':id')
-  getUser(@Param('id') id: string): Promise<People> {
+  get(@Param('id') id: string): Promise<People> {
     return this.peopleService.findOne(id);
   }
 

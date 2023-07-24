@@ -12,22 +12,22 @@ import { FeedStockService } from './feedstock.service';
 import { FeedStock } from './interfaces/feedstock.interface';
 import { CreateFeedStockDto } from './dto/create-feedstock.dto';
 import { UpdateFeedStockDto } from './dto/update-feedstock.dto';
+import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
+import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 
 @Controller('feedstocks')
 export class FeedStockController {
   constructor(private readonly feedStockService: FeedStockService) {}
 
   @Get()
-  getFeedStock(
-    @Query('page') page: number,
-    @Query('limit') limit: number,
-    @Query('search') search: string,
-  ): Promise<FeedStock[]> {
-    return this.feedStockService.findAll(search, page, limit);
+  getAll(
+    @Query() queryParams: PaginatorDto,
+  ): Promise<PaginatorInterface<FeedStock>> {
+    return this.feedStockService.paginate(queryParams);
   }
 
   @Get(':id')
-  getUser(@Param('id') id: string): Promise<FeedStock> {
+  get(@Param('id') id: string): Promise<FeedStock> {
     return this.feedStockService.findOne(id);
   }
 

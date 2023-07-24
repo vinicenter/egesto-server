@@ -1,8 +1,10 @@
 import { InjectTenancyModel } from '@needle-innovision/nestjs-tenancy';
 import { Injectable } from '@nestjs/common';
-import { People } from './interfaces/user.interface';
+import { People } from './interfaces/people.interface';
 import { Model } from 'mongoose';
 import { PeopleDto } from './dto/create-people.dto';
+import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
+import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 
 @Injectable()
 export class PeopleService {
@@ -21,7 +23,9 @@ export class PeopleService {
     return this.peopleModel.create(people);
   }
 
-  async findAll(search: string, page = 1, limit = 20): Promise<People[]> {
+  async paginate(queryParams: PaginatorDto) {
+    const { limit, page, search } = queryParams;
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return this.peopleModel.paginate(
@@ -38,7 +42,7 @@ export class PeopleService {
         page,
         limit,
       },
-    );
+    ) as Promise<PaginatorInterface<People>>;
   }
 
   async findOne(id: string): Promise<People> {
