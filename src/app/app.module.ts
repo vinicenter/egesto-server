@@ -11,6 +11,7 @@ import { BrandsModule } from 'src/modules/brands/brands.module';
 import { FeedstockModule } from 'src/modules/feedstock/feedstock.module';
 import { FamiliesModule } from 'src/modules/families/families.module';
 import { ProdutModule } from 'src/modules/products/products.module';
+import { CostsTableModule } from 'src/modules/costsTable/costsTable.module';
 
 import { ZodValidationPipe } from 'nestjs-zod';
 import { APP_PIPE } from '@nestjs/core';
@@ -37,6 +38,7 @@ import { TenancyModule } from '@needle-innovision/nestjs-tenancy';
     FeedstockModule,
     FamiliesModule,
     ProdutModule,
+    CostsTableModule,
     ConfigModule.forRoot(),
   ],
   controllers: [AppController],
