@@ -2,7 +2,7 @@ import { z } from 'nestjs-zod/z';
 
 export const PaginatorSchema = z.object({
   page: z.string().optional().default('1').transform(Number),
-  limit: z.string().optional().default('10').transform(Number),
+  limit: z.string().optional().default('50').transform(Number),
   search: z.string().optional(),
   orderBy: z.string().optional(),
   order: z
