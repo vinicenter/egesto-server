@@ -24,7 +24,7 @@ export class PeopleService {
   }
 
   async paginate(queryParams: PaginatorDto) {
-    const { limit, page, search } = queryParams;
+    const { limit, page, search, orderBy, order } = queryParams;
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -41,6 +41,7 @@ export class PeopleService {
       {
         page,
         limit,
+        sort: { [orderBy]: order },
       },
     ) as Promise<PaginatorInterface<People>>;
   }

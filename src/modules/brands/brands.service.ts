@@ -26,7 +26,7 @@ export class BrandsService {
   async paginate(
     queryParams: PaginatorDto,
   ): Promise<PaginatorInterface<Brand>> {
-    const { page, limit, search } = queryParams;
+    const { page, limit, search, orderBy, order } = queryParams;
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -42,6 +42,7 @@ export class BrandsService {
       {
         page,
         limit,
+        sort: { [orderBy]: order },
       },
     );
   }

@@ -26,7 +26,7 @@ export class FamilyService {
   async paginate(
     queryParams: PaginatorDto,
   ): Promise<PaginatorInterface<Family>> {
-    const { page, limit, search } = queryParams;
+    const { page, limit, search, orderBy, order } = queryParams;
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -35,6 +35,7 @@ export class FamilyService {
       {
         page,
         limit,
+        sort: { [orderBy]: order },
       },
     );
   }

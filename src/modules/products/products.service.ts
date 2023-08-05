@@ -29,7 +29,16 @@ export class ProductService {
   }
 
   async paginate(queryParams: ProductPaginateDto) {
-    const { brandId, familyId, feedstockId, limit, page, search } = queryParams;
+    const {
+      brandId,
+      familyId,
+      feedstockId,
+      limit,
+      page,
+      search,
+      orderBy,
+      order,
+    } = queryParams;
 
     const query = {};
 
@@ -68,6 +77,7 @@ export class ProductService {
           },
         },
       ],
+      sort: { [orderBy]: order },
     }) as Promise<PaginatorInterface<ProductModelType>>;
 
     return data;

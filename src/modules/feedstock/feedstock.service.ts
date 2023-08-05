@@ -27,7 +27,7 @@ export class FeedStockService {
   async paginate(
     queryParams: PaginatorDto,
   ): Promise<PaginatorInterface<FeedStock>> {
-    const { limit, page, search } = queryParams;
+    const { limit, page, search, orderBy, order } = queryParams;
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -36,6 +36,7 @@ export class FeedStockService {
       {
         page,
         limit,
+        sort: { [orderBy]: order },
         populate: ['brand'],
       },
     );
