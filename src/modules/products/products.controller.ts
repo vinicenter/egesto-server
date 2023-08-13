@@ -22,7 +22,7 @@ export class ProductsController {
   @Get()
   getAll(
     @Query() queryParams: ProductPaginateDto,
-  ): Promise<PaginatorInterface<ProductModelType>> {
+  ): Promise<PaginatorInterface<ProductType>> {
     return this.productService.paginate(queryParams);
   }
 

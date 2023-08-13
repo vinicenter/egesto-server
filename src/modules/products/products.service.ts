@@ -1,7 +1,7 @@
 import { InjectTenancyModel } from '@needle-innovision/nestjs-tenancy';
 import { Injectable } from '@nestjs/common';
 import { ProductModelType, ProductType } from './interfaces/product.interface';
-import { Model } from 'mongoose';
+import { Document, Model } from 'mongoose';
 import { ProductCreateDto } from './dto/create-product.dto';
 import { ProductUpdateDto } from './dto/update-product.dto';
 import { calculateTotalCost } from './products.repository';
@@ -28,7 +28,9 @@ export class ProductService {
     return this.productModel.create(product);
   }
 
-  async paginate(queryParams: ProductPaginateDto) {
+  async paginate(
+    queryParams: ProductPaginateDto,
+  ): Promise<PaginatorInterface<ProductType>> {
     const {
       brandId,
       familyId,
@@ -63,7 +65,7 @@ export class ProductService {
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const data = this.productModel.paginate(query, {
+    const result = this.productModel.paginate(query, {
       page,
       limit,
       populate: [
@@ -78,7 +80,22 @@ export class ProductService {
         },
       ],
       sort: { [orderBy]: order },
-    }) as Promise<PaginatorInterface<ProductModelType>>;
+    }) as Promise<PaginatorInterface<ProductType>>;
+
+    const data = JSON.parse(JSON.stringify(await result));
+
+    data.docs.forEach((product: ProductType) => {
+      if (product.production) {
+        product.production.cost = calculateTotalCost(
+          product as ProductModelType,
+        );
+      }
+
+      if (product.pack) {
+        product.pack.weight =
+          product.unit.weight * product.pack.numberOfUnitsInPack;
+      }
+    });
 
     return data;
   }
