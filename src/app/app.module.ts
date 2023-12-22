@@ -22,8 +22,6 @@ import { TenancyModule } from '@needle-innovision/nestjs-tenancy';
   imports: [
     TenancyModule.forRoot({
       tenantIdentifier: 'x-tenant',
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      options: () => {},
       uri: (tenantId: string) => {
         const uri = process.env.MONGO_URI + `/${tenantId}?authSource=admin`;
 
