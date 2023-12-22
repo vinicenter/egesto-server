@@ -29,6 +29,7 @@ export const PricesTableModelSchema = z.object({
         expense: z.number(),
         tax: z.number(),
         productionLost: z.number(),
+        margin: z.number(),
       }),
     )
     .optional(),
