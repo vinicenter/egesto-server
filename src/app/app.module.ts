@@ -22,6 +22,7 @@ import { TenancyModule } from '@needle-innovision/nestjs-tenancy';
   imports: [
     TenancyModule.forRoot({
       tenantIdentifier: 'x-tenant',
+      options: () => null,
       uri: (tenantId: string) => {
         const uri = process.env.MONGO_URI + `/${tenantId}?authSource=admin`;
 
