@@ -51,6 +51,9 @@ export class PeopleService {
   }
 
   async delete(id: string): Promise<People> {
-    return this.peopleModel.findOneAndDelete({ _id: id });
+    return this.peopleModel.findOneAndDelete(
+      { _id: id },
+      { returnDocument: 'before' },
+    );
   }
 }

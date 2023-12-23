@@ -127,6 +127,9 @@ export class ProductService {
   }
 
   async delete(id: string): Promise<ProductModelType> {
-    return this.productModel.findOneAndDelete({ _id: id });
+    return this.productModel.findOneAndDelete(
+      { _id: id },
+      { returnDocument: 'before' },
+    );
   }
 }

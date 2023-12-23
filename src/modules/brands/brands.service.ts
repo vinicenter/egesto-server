@@ -52,6 +52,9 @@ export class BrandsService {
   }
 
   async delete(id: string): Promise<Brand> {
-    return this.brandModel.findOneAndDelete({ _id: id });
+    return this.brandModel.findOneAndDelete(
+      { _id: id },
+      { returnDocument: 'before' },
+    );
   }
 }

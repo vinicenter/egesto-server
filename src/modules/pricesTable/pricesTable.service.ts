@@ -77,6 +77,9 @@ export class PricesTableService {
   }
 
   async delete(id: string): Promise<PricesTable> {
-    return this.pricesTableModel.findOneAndDelete({ _id: id });
+    return this.pricesTableModel.findOneAndDelete(
+      { _id: id },
+      { returnDocument: 'before' },
+    );
   }
 }

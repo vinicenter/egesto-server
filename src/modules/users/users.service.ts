@@ -88,6 +88,9 @@ export class UsersService {
   }
 
   async delete(id: string): Promise<User> {
-    return this.userModel.findOneAndDelete({ _id: id });
+    return this.userModel.findOneAndDelete(
+      { _id: id },
+      { returnDocument: 'before' },
+    );
   }
 }

@@ -47,6 +47,9 @@ export class FeedStockService {
   }
 
   async delete(id: string): Promise<FeedStock> {
-    return this.feedStockModel.findOneAndDelete({ _id: id });
+    return this.feedStockModel.findOneAndDelete(
+      { _id: id },
+      { returnDocument: 'before' },
+    );
   }
 }

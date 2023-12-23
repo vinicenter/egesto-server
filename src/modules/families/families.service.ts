@@ -45,6 +45,9 @@ export class FamilyService {
   }
 
   async delete(id: string): Promise<Family> {
-    return this.familyModel.findOneAndDelete({ _id: id });
+    return this.familyModel.findOneAndDelete(
+      { _id: id },
+      { returnDocument: 'before' },
+    );
   }
 }
