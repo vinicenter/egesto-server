@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
-import { UserDto } from './dto/create-user.dto';
+import { UserUpdateDto, UserCreateDto } from './dto/user.dto';
 import { User } from './interfaces/user.interface';
 import { InjectTenancyModel } from '@needle-innovision/nestjs-tenancy';
 import { hash, compare } from 'bcrypt';
@@ -29,7 +29,7 @@ export class UsersService {
     return user;
   }
 
-  async update(id: string, user: UserDto) {
+  async update(id: string, user: UserUpdateDto) {
     const updatedUser = {
       name: user.name,
       username: user.username,
@@ -45,7 +45,7 @@ export class UsersService {
     });
   }
 
-  async create(user: UserDto): Promise<User> {
+  async create(user: UserCreateDto): Promise<User> {
     const createdUser = {
       name: user.name,
       username: user.username,
