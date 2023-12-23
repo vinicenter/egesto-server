@@ -3,9 +3,9 @@ import { z } from 'nestjs-zod/z';
 import { toMongooseSchema } from 'mongoose-zod';
 
 export const UserSchema = z.object({
-  username: z.string().mongooseTypeOptions({ unique: true }),
-  password: z.string().mongooseTypeOptions({ select: false }),
-  name: z.string().optional(),
+  username: z.string().min(1).mongooseTypeOptions({ unique: true }),
+  password: z.string().min(1).mongooseTypeOptions({ select: false }),
+  name: z.string().min(1),
   email: z.string().email().mongooseTypeOptions({ unique: true }),
 });
 
