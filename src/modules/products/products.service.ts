@@ -65,7 +65,7 @@ export class ProductService {
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const result = this.productModel.paginate(query, {
+    const result = (await this.productModel.paginate(query, {
       page,
       limit,
       populate: [
@@ -80,24 +80,9 @@ export class ProductService {
         },
       ],
       sort: { [orderBy]: order },
-    }) as Promise<PaginatorInterface<ProductType>>;
+    })) as Promise<PaginatorInterface<ProductType>>;
 
-    const data = JSON.parse(JSON.stringify(await result));
-
-    data.docs.forEach((product: ProductType) => {
-      if (product.production) {
-        product.production.cost = calculateTotalCost(
-          product as ProductModelType,
-        );
-      }
-
-      if (product.pack) {
-        product.pack.weight =
-          product.unit.weight * product.pack.numberOfUnitsInPack;
-      }
-    });
-
-    return data;
+    return result;
   }
 
   async findOne(id: string): Promise<ProductType> {

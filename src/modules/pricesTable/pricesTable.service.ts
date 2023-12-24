@@ -55,10 +55,21 @@ export class PricesTableService {
       'customer',
       {
         path: 'prices',
-        populate: {
-          path: 'product',
-          populate: 'family',
-        },
+        populate: [
+          {
+            path: 'product',
+            populate: [
+              'family',
+              {
+                path: 'production',
+                populate: {
+                  path: 'formulation',
+                  populate: 'feedstock',
+                },
+              },
+            ],
+          },
+        ],
       },
       {
         path: 'costTable',
