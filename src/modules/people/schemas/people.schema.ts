@@ -22,6 +22,7 @@ export const PersonSchema = z.object({
   phone: z.string().optional(),
   email: z.string().email().optional(),
   observation: z.string().optional(),
+  contractExpenses: z.number().optional(),
   address: z
     .object({
       street: z.string().optional(),
