@@ -10,15 +10,27 @@ export const calculateTotalCost = (product: ProductModelType) => {
     0,
   );
 
-  const weight = product.production?.formulation.reduce((acc, curr) => {
-    return (acc = acc + (curr?.considerInWeightCalculation ? curr.value : 0));
+  const totalVolume = product.production?.formulation.reduce((acc, curr) => {
+    return (acc = acc + (curr?.considerInVolumeProduced ? curr.value : 0));
   }, 0);
 
-  const productCost = (formulationCost / weight) * product.unit.weight;
+  const weightFormulation = product.production?.formulation.reduce(
+    (acc, curr) => {
+      return (acc = acc + (curr?.considerInWeightCalculation ? curr.value : 0));
+    },
+    0,
+  );
+
+  const productCost =
+    (formulationCost / weightFormulation) * product.unit.weight;
+  const weightPerFormulation = totalVolume * product.unit.weight;
 
   return {
     unitCost: productCost,
     packCost: productCost * product.pack.numberOfUnitsInPack,
-    weightPerFormulation: weight,
+    weightPerFormulation,
+    isWeightPerFormulationValid:
+      weightPerFormulation ===
+      product.unit.weight * product.pack.numberOfUnitsInPack,
   };
 };

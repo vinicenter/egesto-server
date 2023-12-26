@@ -36,6 +36,7 @@ export const ProductModelSchema = z.object({
               .mongooseTypeOptions({ ref: 'FEEDSTOCK_MODEL' }),
             value: z.number(),
             considerInWeightCalculation: z.boolean(),
+            considerInVolumeProduced: z.boolean(),
           })
           .optional(),
       ),
