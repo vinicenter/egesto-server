@@ -26,7 +26,7 @@ export const ProductModelSchema = z.object({
   production: z
     .object({
       lost: z.number().optional(),
-      amountOfVolumeProduced: z.number().optional(),
+      useCustomPackCostMultiplier: z.number().optional(),
       formulation: z.array(
         z
           .object({
@@ -62,15 +62,12 @@ export const ProductModelSchema = z.object({
 
 export const ProductSchema = ProductModelSchema.and(
   z.object({
-    pack: z.object({
-      weight: z.number(),
-    }),
-    production: z.object({
-      cost: z.object({
-        unitCost: z.number(),
-        packCost: z.number(),
-        weightPerFormulation: z.number(),
-      }),
+    packWeigth: z.number(),
+    productionCost: z.object({
+      unitCost: z.number(),
+      packCost: z.number(),
+      weightPerFormulation: z.number(),
+      isWeightPerFormulationValid: z.boolean(),
     }),
   }),
 );

@@ -25,9 +25,13 @@ export const calculateTotalCost = (product: ProductModelType) => {
     (formulationCost / weightFormulation) * product.unit.weight;
   const weightPerFormulation = totalVolume * product.unit.weight;
 
+  const packCostMultiplier = product.production?.useCustomPackCostMultiplier
+    ? product.production?.useCustomPackCostMultiplier
+    : product.pack.numberOfUnitsInPack;
+
   return {
     unitCost: productCost,
-    packCost: productCost * product.pack.numberOfUnitsInPack,
+    packCost: productCost * packCostMultiplier,
     weightPerFormulation,
     isWeightPerFormulationValid:
       weightPerFormulation ===

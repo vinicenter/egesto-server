@@ -98,17 +98,7 @@ export class ProductService {
       },
     ]);
 
-    const data = result.toObject() as ProductType;
-
-    if (data.production) {
-      data.production.cost = calculateTotalCost(result);
-    }
-
-    if (data.pack) {
-      data.pack.weight = data.unit.weight * data.pack.numberOfUnitsInPack;
-    }
-
-    return data;
+    return result;
   }
 
   async delete(id: string): Promise<ProductModelType> {
