@@ -69,7 +69,10 @@ export class CostsTableService {
         path: 'shipments',
         populate: {
           path: 'families',
-          populate: 'family',
+          populate: {
+            path: 'family',
+            populate: 'linkedFamily',
+          },
         },
       },
     ]);
