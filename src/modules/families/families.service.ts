@@ -36,12 +36,13 @@ export class FamilyService {
         page,
         limit,
         sort: { [orderBy]: order },
+        populate: ['linkedFamily'],
       },
     );
   }
 
   async findOne(id: string): Promise<Family> {
-    return this.familyModel.findOne({ _id: id });
+    return this.familyModel.findOne({ _id: id }).populate(['linkedFamily']);
   }
 
   async delete(id: string): Promise<Family> {

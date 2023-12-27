@@ -12,6 +12,11 @@ export const FamilySchema = z.object({
       })
       .optional(),
   ),
+  linkedFamily: z
+    .string()
+    .refine((val) => mongoose.Types.ObjectId.isValid(val))
+    .mongooseTypeOptions({ ref: 'FAMILY_MODEL' })
+    .nullish(),
 });
 
 const FamilySchemaZodMongoose = FamilySchema.mongoose({
