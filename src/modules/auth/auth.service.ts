@@ -25,6 +25,9 @@ export class AuthService {
       token: await this.jwtService.signAsync(payload, {
         secret: process.env.JWT_SECRET,
       }),
+      username: user.username,
+      email: user.email,
+      name: user.name,
     };
   }
 }
