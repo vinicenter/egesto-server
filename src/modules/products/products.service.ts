@@ -70,7 +70,10 @@ export class ProductService {
       limit,
       populate: [
         'brand',
-        'family',
+        {
+          path: 'family',
+          populate: 'linkedFamily',
+        },
         {
           path: 'production',
           populate: {
@@ -88,7 +91,10 @@ export class ProductService {
   async findOne(id: string): Promise<ProductType> {
     const result = await this.productModel.findById(id).populate([
       'brand',
-      'family',
+      {
+        path: 'family',
+        populate: 'linkedFamily',
+      },
       {
         path: 'production',
         populate: {

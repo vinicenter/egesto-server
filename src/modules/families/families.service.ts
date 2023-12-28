@@ -42,7 +42,12 @@ export class FamilyService {
   }
 
   async findOne(id: string): Promise<Family> {
-    return this.familyModel.findOne({ _id: id }).populate(['linkedFamily']);
+    return this.familyModel.findOne({ _id: id }).populate({
+      path: 'linkedFamily',
+      populate: {
+        path: 'linkedFamily',
+      },
+    });
   }
 
   async delete(id: string): Promise<Family> {
