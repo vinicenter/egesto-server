@@ -3,6 +3,7 @@ import { z } from 'nestjs-zod/z';
 
 export const CostsTableModelSchema = z.object({
   name: z.string(),
+  defaultShipmentCost: z.number(),
   taxes: z.array(
     z
       .object({
