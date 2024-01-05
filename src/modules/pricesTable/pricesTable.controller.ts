@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  Response,
 } from '@nestjs/common';
 import { PricesTableService } from './pricesTable.service';
 import { PricesTable } from './interfaces/pricesTable.interface';
@@ -29,6 +30,16 @@ export class PricesTableController {
   @Get(':id')
   get(@Param('id') id: string): Promise<PricesTable> {
     return this.pricesTableService.findOne(id);
+  }
+
+  @Get(':id/report')
+  async reportById(
+    @Param('id') id: string,
+    @Response({ passthrough: true }) res,
+  ): Promise<string> {
+    res.setHeader('Content-Type', 'text/csv');
+
+    return this.pricesTableService.generateReportById(id);
   }
 
   @Post()
