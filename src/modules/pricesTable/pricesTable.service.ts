@@ -138,7 +138,10 @@ export class PricesTableService {
           {
             path: 'product',
             populate: [
-              'family',
+              {
+                path: 'family',
+                populate: 'linkedFamily',
+              },
               {
                 path: 'production',
                 populate: {
