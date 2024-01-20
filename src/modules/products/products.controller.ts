@@ -10,10 +10,14 @@ import {
 } from '@nestjs/common';
 import { ProductService } from './products.service';
 import { ProductModelType, ProductType } from './interfaces/product.interface';
-import { ProductCreateDto } from './dto/create-product.dto';
-import { ProductUpdateDto } from './dto/update-product.dto';
-import { ProductPaginateDto } from './dto/paginator-product.dto';
 import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
+
+import {
+  ProductPaginateDto,
+  ProductCreateDto,
+  ProductUpdateDto,
+  ProductGenerateDescriptionAiDto,
+} from './dto/product.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -24,6 +28,13 @@ export class ProductsController {
     @Query() queryParams: ProductPaginateDto,
   ): Promise<PaginatorInterface<ProductType>> {
     return this.productService.paginate(queryParams);
+  }
+
+  @Get('generate-description-ai')
+  generateDescriptionAi(
+    @Query() data: ProductGenerateDescriptionAiDto,
+  ): Promise<string> {
+    return this.productService.generateDescriptionAiFromProduct(data);
   }
 
   @Get(':id')

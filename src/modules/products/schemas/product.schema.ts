@@ -82,3 +82,11 @@ export const ProductPaginatorSchema = PaginatorSchema.and(
     familyId: z.string().optional(),
   }),
 );
+
+export const ProductGenerateDescriptionAiSchema = z.object({
+  productName: z.string().optional(),
+  productFamily: z.string().optional(),
+  brandName: z.string().optional(),
+  brandDescription: z.string().optional(),
+  oldProductDescription: z.string().optional(),
+});

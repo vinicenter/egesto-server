@@ -1,12 +1,20 @@
 import { InjectTenancyModel } from '@needle-innovision/nestjs-tenancy';
 import { Injectable } from '@nestjs/common';
-import { ProductModelType, ProductType } from './interfaces/product.interface';
-import { Document, Model } from 'mongoose';
-import { ProductCreateDto } from './dto/create-product.dto';
-import { ProductUpdateDto } from './dto/update-product.dto';
-import { calculateTotalCost } from './products.repository';
-import { ProductPaginateDto } from './dto/paginator-product.dto';
+import {
+  ProductDescriptionPromptParams,
+  ProductModelType,
+  ProductType,
+} from './interfaces/product.interface';
+import { Model } from 'mongoose';
 import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
+import { getModel } from 'src/utils/googleGenerativeAi';
+import { makeProductDescriptionPrompt } from 'src/modules/products/prompts/productDescription';
+
+import {
+  ProductCreateDto,
+  ProductUpdateDto,
+  ProductPaginateDto,
+} from './dto/product.dto';
 
 @Injectable()
 export class ProductService {
@@ -112,5 +120,19 @@ export class ProductService {
       { _id: id },
       { returnDocument: 'before' },
     );
+  }
+
+  async generateDescriptionAiFromProduct(
+    params: ProductDescriptionPromptParams,
+  ): Promise<string> {
+    const model = getModel({
+      model: 'gemini-pro',
+    });
+
+    const prompt = makeProductDescriptionPrompt(params);
+
+    const result = await model.generateContent(prompt);
+
+    return result.response.candidates[0].content.parts[0].text || '';
   }
 }
