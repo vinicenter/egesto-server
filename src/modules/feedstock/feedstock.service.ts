@@ -6,6 +6,8 @@ import { CreateFeedStockDto } from './dto/create-feedstock.dto';
 import { UpdateFeedStockDto } from './dto/update-feedstock.dto';
 import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
 import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
+import { Brand } from '../brands/interfaces/brands.interface';
+import { generateCsvString } from 'src/utils/generateCsvString';
 
 @Injectable()
 export class FeedStockService {
@@ -22,6 +24,44 @@ export class FeedStockService {
 
   async create(feedStock: CreateFeedStockDto): Promise<FeedStock> {
     return this.feedStockModel.create(feedStock);
+  }
+
+  async generateReport(): Promise<string> {
+    const data = await this.feedStockModel.find().populate(['brand']);
+
+    if (!data) {
+      throw new Error('feedstock not found.');
+    }
+
+    type FeedstockReport = {
+      id: string;
+      nome: string;
+      marca: string;
+      ncm: string;
+      preço: number;
+      icms: number;
+      'preço s/ icms': number;
+    };
+
+    const csvData: FeedstockReport[] = [];
+
+    data.forEach((feedStock) => {
+      const brand = feedStock.brand as unknown as Brand;
+
+      csvData.push({
+        id: feedStock._id,
+        nome: feedStock.name,
+        marca: brand ? brand.name : '',
+        ncm: feedStock.ncm,
+        preço: feedStock.price,
+        icms: feedStock.icms,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        'preço s/ icms': feedStock.priceWithoutIcms,
+      });
+    });
+
+    return generateCsvString(csvData);
   }
 
   async paginate(

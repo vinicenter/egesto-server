@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  Response,
 } from '@nestjs/common';
 import { FeedStockService } from './feedstock.service';
 import { FeedStock } from './interfaces/feedstock.interface';
@@ -24,6 +25,13 @@ export class FeedStockController {
     @Query() queryParams: PaginatorDto,
   ): Promise<PaginatorInterface<FeedStock>> {
     return this.feedStockService.paginate(queryParams);
+  }
+
+  @Get('report')
+  report(@Response({ passthrough: true }) res): Promise<string> {
+    res.setHeader('Content-Type', 'text/csv');
+
+    return this.feedStockService.generateReport();
   }
 
   @Get(':id')
