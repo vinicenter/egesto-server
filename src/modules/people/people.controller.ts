@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  Response,
 } from '@nestjs/common';
 import { PeopleService } from './people.service';
 import { People } from './interfaces/people.interface';
@@ -23,6 +24,13 @@ export class PeopleController {
     @Query() queryParams: PaginatorDto,
   ): Promise<PaginatorInterface<People>> {
     return this.peopleService.paginate(queryParams);
+  }
+
+  @Get('report')
+  report(@Response({ passthrough: true }) res): Promise<string> {
+    res.setHeader('Content-Type', 'text/csv');
+
+    return this.peopleService.generateReport();
   }
 
   @Get(':id')
