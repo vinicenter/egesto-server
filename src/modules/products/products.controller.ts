@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  Response,
 } from '@nestjs/common';
 import { ProductService } from './products.service';
 import { ProductModelType, ProductType } from './interfaces/product.interface';
@@ -35,6 +36,13 @@ export class ProductsController {
     @Query() data: ProductGenerateDescriptionAiDto,
   ): Promise<string> {
     return this.productService.generateDescriptionAiFromProduct(data);
+  }
+
+  @Get('report')
+  report(@Response({ passthrough: true }) res): Promise<string> {
+    res.setHeader('Content-Type', 'text/csv');
+
+    return this.productService.generateReport();
   }
 
   @Get(':id')

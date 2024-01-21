@@ -65,7 +65,7 @@ export const ProductModelSchema = z.object({
 
 export const ProductSchema = ProductModelSchema.and(
   z.object({
-    packWeigth: z.number(),
+    packWeight: z.number(),
     productionCost: z.object({
       unitCost: z.number(),
       packCost: z.number(),
