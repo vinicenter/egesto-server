@@ -1,8 +1,8 @@
 import { InjectTenancyModel } from '@needle-innovision/nestjs-tenancy';
 import { Injectable } from '@nestjs/common';
-import { Family } from './interfaces/families.interface';
+import { Family, FamiliesDefaultCost } from './interfaces/families.interface';
 import { Model } from 'mongoose';
-import { FamilyDto } from './dto/create-families.dto';
+import { FamilyDefaultCostDto, FamilyDto } from './dto/create-families.dto';
 import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
 import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 
@@ -11,6 +11,8 @@ export class FamilyService {
   constructor(
     @InjectTenancyModel('FAMILY_MODEL')
     private readonly familyModel: Model<Family>,
+    @InjectTenancyModel('FAMILIES_DEFAULT_COST_MODEL')
+    private readonly familyDefaultCostModel: Model<FamiliesDefaultCost>,
   ) {}
 
   async update(id: string, feedStock: FamilyDto): Promise<Family> {
@@ -55,5 +57,43 @@ export class FamilyService {
       { _id: id },
       { returnDocument: 'before' },
     );
+  }
+
+  async updateDefaultCosts(
+    data: FamilyDefaultCostDto,
+  ): Promise<FamiliesDefaultCost> {
+    let defaultCosts = await this.familyDefaultCostModel.find();
+
+    if (!defaultCosts.length) {
+      const createdDefaultCost = await this.familyDefaultCostModel.create({
+        costs: [],
+      });
+
+      defaultCosts = [createdDefaultCost];
+    }
+
+    const defaultCostsId = defaultCosts[0]._id;
+
+    return this.familyDefaultCostModel.findOneAndUpdate(
+      {
+        _id: defaultCostsId,
+      },
+      data,
+      { new: true },
+    );
+  }
+
+  async getDefaultCosts(): Promise<FamiliesDefaultCost> {
+    const defaultCosts = await this.familyDefaultCostModel.find();
+
+    if (!defaultCosts.length) {
+      const createdDefaultCost = await this.familyDefaultCostModel.create({
+        costs: [],
+      });
+
+      return createdDefaultCost;
+    }
+
+    return defaultCosts[0];
   }
 }
