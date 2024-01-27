@@ -13,8 +13,8 @@ import { PricesTableService } from './pricesTable.service';
 import { PricesTable } from './interfaces/pricesTable.interface';
 import { PricesTableDto } from './dto/create-prices-table.dto';
 import { PricesTableUpdateDto } from './dto/update-prices-table.dto';
-import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
 import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
+import { PricesTablePaginateDto } from './dto/prices-table.dto';
 
 @Controller('prices-table')
 export class PricesTableController {
@@ -22,7 +22,7 @@ export class PricesTableController {
 
   @Get()
   getAll(
-    @Query() queryParams: PaginatorDto,
+    @Query() queryParams: PricesTablePaginateDto,
   ): Promise<PaginatorInterface<PricesTable>> {
     return this.pricesTableService.paginate(queryParams);
   }

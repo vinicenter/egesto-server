@@ -4,11 +4,11 @@ import { PricesTable } from './interfaces/pricesTable.interface';
 import { Model } from 'mongoose';
 import { PricesTableDto } from './dto/create-prices-table.dto';
 import { PricesTableUpdateDto } from './dto/update-prices-table.dto';
-import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
 import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 import { ProductModelType } from '../products/interfaces/product.interface';
 import { Family } from '../families/interfaces/families.interface';
 import { generateCsvString } from 'src/utils/generateCsvString';
+import { PricesTablePaginateDto } from './dto/prices-table.dto';
 
 @Injectable()
 export class PricesTableService {
@@ -93,28 +93,35 @@ export class PricesTableService {
   }
 
   async paginate(
-    queryParams: PaginatorDto,
+    queryParams: PricesTablePaginateDto,
   ): Promise<PaginatorInterface<PricesTable>> {
-    const { page, limit, search, orderBy, order } = queryParams;
+    const { page, limit, search, orderBy, order, archived } = queryParams;
+
+    const query = {};
+
+    if (search) {
+      query['$or'] = [{ name: { $regex: search, $options: 'i' } }];
+    }
+
+    if (archived === true || archived === false) {
+      query['archived'] = archived;
+    }
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    return this.pricesTableModel.paginate(
-      search ? { $or: [{ name: { $regex: search, $options: 'i' } }] } : {},
-      {
-        page,
-        limit,
-        sort: { [orderBy]: order },
-        populate: [
-          'costTable',
-          'customer',
-          {
-            path: 'prices',
-            populate: 'product',
-          },
-        ],
-      },
-    );
+    return this.pricesTableModel.paginate(query, {
+      page,
+      limit,
+      sort: { [orderBy]: order },
+      populate: [
+        'costTable',
+        'customer',
+        {
+          path: 'prices',
+          populate: 'product',
+        },
+      ],
+    });
   }
 
   async findOne(id: string): Promise<PricesTable> {

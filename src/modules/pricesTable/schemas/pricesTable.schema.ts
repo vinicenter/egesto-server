@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { z } from 'nestjs-zod/z';
+import { PaginatorSchema } from 'src/utils/paginator/paginator.schema';
 
 export const PricesTableModelSchema = z.object({
   archived: z.boolean(),
@@ -34,3 +35,12 @@ export const PricesTableModelSchema = z.object({
     )
     .optional(),
 });
+
+export const PricesTablePaginatorSchema = PaginatorSchema.and(
+  z.object({
+    archived: z
+      .string()
+      .optional()
+      .transform((value) => value === 'true'),
+  }),
+);
