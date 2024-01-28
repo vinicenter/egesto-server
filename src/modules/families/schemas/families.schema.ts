@@ -3,6 +3,7 @@ import { z } from 'nestjs-zod/z';
 import { toMongooseSchema } from 'mongoose-zod';
 
 export const FamilySchema = z.object({
+  externalId: z.string().optional(),
   name: z.string(),
   costs: z.array(
     z

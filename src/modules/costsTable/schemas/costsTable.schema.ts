@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { z } from 'nestjs-zod/z';
 
 export const CostsTableModelSchema = z.object({
+  externalId: z.string().optional(),
   name: z.string(),
   defaultShipmentCost: z.number(),
   taxes: z.array(

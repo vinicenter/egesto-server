@@ -3,6 +3,7 @@ import { z } from 'nestjs-zod/z';
 import { toMongooseSchema } from 'mongoose-zod';
 
 export const BrandSchema = z.object({
+  externalId: z.string().optional(),
   name: z.string(),
   description: z.string().optional(),
 });

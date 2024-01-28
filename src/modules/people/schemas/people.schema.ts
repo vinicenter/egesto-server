@@ -10,6 +10,7 @@ const cnpjCpfRegex = new RegExp(
 );
 
 export const PersonSchema = z.object({
+  externalId: z.string().optional(),
   document: z
     .string()
     .max(18)

@@ -3,6 +3,7 @@ import { z } from 'nestjs-zod/z';
 import { PaginatorSchema } from 'src/utils/paginator/paginator.schema';
 
 export const ProductModelSchema = z.object({
+  externalId: z.string().optional(),
   name: z.string(),
   code: z
     .string()
