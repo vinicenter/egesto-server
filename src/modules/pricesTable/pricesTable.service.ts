@@ -9,6 +9,7 @@ import { ProductModelType } from '../products/interfaces/product.interface';
 import { Family } from '../families/interfaces/families.interface';
 import { generateCsvString } from 'src/utils/generateCsvString';
 import { PricesTablePaginateDto } from './dto/prices-table.dto';
+import { populateFormulation } from '../products/constants/product-population';
 
 @Injectable()
 export class PricesTableService {
@@ -142,7 +143,7 @@ export class PricesTableService {
                 path: 'production',
                 populate: {
                   path: 'formulation',
-                  populate: 'feedstock',
+                  populate: populateFormulation,
                 },
               },
             ],

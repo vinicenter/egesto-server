@@ -18,31 +18,7 @@ import {
 import { generateCsvString } from 'src/utils/generateCsvString';
 import { Family } from '../families/interfaces/families.interface';
 import { Brand } from '../brands/interfaces/brands.interface';
-
-const populateFormulation = [
-  {
-    path: 'feedstocks',
-    populate: 'feedstock',
-  },
-  {
-    path: 'products',
-    populate: {
-      path: 'product',
-      populate: {
-        path: 'production',
-        populate: {
-          path: 'formulation',
-          populate: [
-            {
-              path: 'feedstocks',
-              populate: 'feedstock',
-            },
-          ],
-        },
-      },
-    },
-  },
-];
+import { populateFormulation } from './constants/product-population';
 
 @Injectable()
 export class ProductService {

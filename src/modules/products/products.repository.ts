@@ -28,14 +28,14 @@ export const calculateTotalCost = (product: ProductModelType) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       return acc + curr.value * curr.feedstock?.priceWithoutIcms;
-    }, 0);
+    }, 0) || 0;
 
   const formulationCostProduct =
     product.production?.formulation?.products.reduce((acc, curr) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       return acc + curr.value * curr.product?.productionCost?.unitCost;
-    }, 0);
+    }, 0) || 0;
 
   const formulationCost = formulationCostFeedstock + formulationCostProduct;
 
