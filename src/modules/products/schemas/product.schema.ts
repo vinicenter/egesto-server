@@ -31,19 +31,33 @@ export const ProductModelSchema = z.object({
     .object({
       lost: z.number().optional(),
       useCustomPackCostMultiplier: z.number().optional(),
-      formulation: z.array(
-        z
-          .object({
-            feedstock: z
+      canBeFeedstock: z.boolean().optional(),
+      formulation: z.object({
+        feedstocks: z.array(
+          z
+            .object({
+              feedstock: z
+                .string()
+                .refine((val) => mongoose.Types.ObjectId.isValid(val))
+                .mongooseTypeOptions({ ref: 'FEEDSTOCK_MODEL' }),
+              value: z.number(),
+              considerInWeightCalculation: z.boolean(),
+              considerInVolumeProduced: z.boolean(),
+            })
+            .optional(),
+        ),
+        products: z.array(
+          z.object({
+            product: z
               .string()
               .refine((val) => mongoose.Types.ObjectId.isValid(val))
-              .mongooseTypeOptions({ ref: 'FEEDSTOCK_MODEL' }),
+              .mongooseTypeOptions({ ref: 'PRODUCT_MODEL' }),
             value: z.number(),
             considerInWeightCalculation: z.boolean(),
             considerInVolumeProduced: z.boolean(),
-          })
-          .optional(),
-      ),
+          }),
+        ),
+      }),
     })
     .optional(),
   taxes: z
@@ -81,6 +95,10 @@ export const ProductPaginatorSchema = PaginatorSchema.and(
     feedstockId: z.string().optional(),
     brandId: z.string().optional(),
     familyId: z.string().optional(),
+    onlyFeedstockEnabled: z
+      .string()
+      .optional()
+      .transform((value) => value === 'true'),
   }),
 );
 

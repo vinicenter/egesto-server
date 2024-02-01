@@ -19,6 +19,31 @@ import { generateCsvString } from 'src/utils/generateCsvString';
 import { Family } from '../families/interfaces/families.interface';
 import { Brand } from '../brands/interfaces/brands.interface';
 
+const populateFormulation = [
+  {
+    path: 'feedstocks',
+    populate: 'feedstock',
+  },
+  {
+    path: 'products',
+    populate: {
+      path: 'product',
+      populate: {
+        path: 'production',
+        populate: {
+          path: 'formulation',
+          populate: [
+            {
+              path: 'feedstocks',
+              populate: 'feedstock',
+            },
+          ],
+        },
+      },
+    },
+  },
+];
+
 @Injectable()
 export class ProductService {
   constructor(
@@ -37,7 +62,7 @@ export class ProductService {
         path: 'production',
         populate: {
           path: 'formulation',
-          populate: 'feedstock',
+          populate: populateFormulation,
         },
       },
     ]);
@@ -125,6 +150,7 @@ export class ProductService {
       brandId,
       familyId,
       feedstockId,
+      onlyFeedstockEnabled,
       limit,
       page,
       search,
@@ -136,6 +162,10 @@ export class ProductService {
 
     if (feedstockId) {
       query['production.formulation.feedstock'] = feedstockId;
+    }
+
+    if (onlyFeedstockEnabled) {
+      query['production.canBeFeedstock'] = onlyFeedstockEnabled;
     }
 
     if (brandId) {
@@ -168,7 +198,7 @@ export class ProductService {
           path: 'production',
           populate: {
             path: 'formulation',
-            populate: 'feedstock',
+            populate: populateFormulation,
           },
         },
       ],
@@ -189,7 +219,7 @@ export class ProductService {
         path: 'production',
         populate: {
           path: 'formulation',
-          populate: 'feedstock',
+          populate: populateFormulation,
         },
       },
     ]);
