@@ -59,7 +59,7 @@ export class PricesTableService {
     data.prices.forEach((price) => {
       const product = price.product as unknown as ProductModelType;
       const family = product.family as unknown as Family;
-      const linkedFamily = family.linkedFamily as unknown as Family;
+      const linkedFamily = family?.linkedFamily as unknown as Family;
 
       csvData.push({
         id: product._id,
