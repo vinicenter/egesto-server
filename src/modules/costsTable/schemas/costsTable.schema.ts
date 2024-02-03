@@ -37,4 +37,5 @@ export const CostsTableModelSchema = z.object({
         .optional(),
     ),
   }),
+  deletedAt: z.string().optional(),
 });

@@ -8,6 +8,7 @@ import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
 import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 import { Brand } from '../brands/interfaces/brands.interface';
 import { generateCsvString } from 'src/utils/generateCsvString';
+import { softDelete } from 'src/utils/softDelete';
 
 @Injectable()
 export class FeedStockService {
@@ -27,7 +28,9 @@ export class FeedStockService {
   }
 
   async generateReport(): Promise<string> {
-    const data = await this.feedStockModel.find().populate(['brand']);
+    const data = await this.feedStockModel
+      .find({ deletedAt: null })
+      .populate(['brand']);
 
     if (!data) {
       throw new Error('feedstock not found.');
@@ -69,17 +72,22 @@ export class FeedStockService {
   ): Promise<PaginatorInterface<FeedStock>> {
     const { limit, page, search, orderBy, order } = queryParams;
 
+    const query = {};
+
+    if (search) {
+      query['$or'] = [{ name: { $regex: search, $options: 'i' } }];
+    }
+
+    query['deletedAt'] = [null];
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    return this.feedStockModel.paginate(
-      search ? { $or: [{ name: { $regex: search, $options: 'i' } }] } : {},
-      {
-        page,
-        limit,
-        sort: { [orderBy]: order },
-        populate: ['brand'],
-      },
-    );
+    return this.feedStockModel.paginate(query, {
+      page,
+      limit,
+      sort: { [orderBy]: order },
+      populate: ['brand'],
+    });
   }
 
   async findOne(id: string): Promise<FeedStock> {
@@ -87,9 +95,6 @@ export class FeedStockService {
   }
 
   async delete(id: string): Promise<FeedStock> {
-    return this.feedStockModel.findOneAndDelete(
-      { _id: id },
-      { returnDocument: 'before' },
-    );
+    return softDelete<FeedStock>(this.feedStockModel, id);
   }
 }

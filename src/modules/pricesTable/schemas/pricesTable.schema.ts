@@ -34,6 +34,7 @@ export const PricesTableModelSchema = z.object({
       }),
     )
     .optional(),
+  deletedAt: z.string().optional(),
 });
 
 export const PricesTablePaginatorSchema = PaginatorSchema.and(

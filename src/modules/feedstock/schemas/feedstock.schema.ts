@@ -17,6 +17,7 @@ export const FeedStockSchema = z.object({
       ref: 'BRAND_MODEL',
     })
     .nullish(),
+  deletedAt: z.string().optional(),
 });
 
 const FeedStockSchemaZodMongoose = FeedStockSchema.mongoose({

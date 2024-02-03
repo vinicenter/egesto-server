@@ -10,6 +10,7 @@ import { Family } from '../families/interfaces/families.interface';
 import { generateCsvString } from 'src/utils/generateCsvString';
 import { PricesTablePaginateDto } from './dto/prices-table.dto';
 import { populateFormulation } from '../products/constants/product-population';
+import { softDelete } from 'src/utils/softDelete';
 
 @Injectable()
 export class PricesTableService {
@@ -108,6 +109,8 @@ export class PricesTableService {
       query['archived'] = archived;
     }
 
+    query['deletedAt'] = null;
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return this.pricesTableModel.paginate(query, {
@@ -170,9 +173,6 @@ export class PricesTableService {
   }
 
   async delete(id: string): Promise<PricesTable> {
-    return this.pricesTableModel.findOneAndDelete(
-      { _id: id },
-      { returnDocument: 'before' },
-    );
+    return softDelete(this.pricesTableModel, id);
   }
 }

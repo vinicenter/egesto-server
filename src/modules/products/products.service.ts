@@ -19,6 +19,7 @@ import { generateCsvString } from 'src/utils/generateCsvString';
 import { Family } from '../families/interfaces/families.interface';
 import { Brand } from '../brands/interfaces/brands.interface';
 import { populateFormulation } from './constants/product-population';
+import { softDelete } from 'src/utils/softDelete';
 
 @Injectable()
 export class ProductService {
@@ -28,7 +29,7 @@ export class ProductService {
   ) {}
 
   async generateReport(): Promise<string> {
-    const data = await this.productModel.find().populate([
+    const data = await this.productModel.find({ deletedAt: null }).populate([
       'brand',
       {
         path: 'family',
@@ -159,6 +160,8 @@ export class ProductService {
       ];
     }
 
+    query['deletedAt'] = null;
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const result = (await this.productModel.paginate(query, {
@@ -204,10 +207,7 @@ export class ProductService {
   }
 
   async delete(id: string): Promise<ProductModelType> {
-    return this.productModel.findOneAndDelete(
-      { _id: id },
-      { returnDocument: 'before' },
-    );
+    return softDelete(this.productModel, id);
   }
 
   async generateDescriptionAiFromProduct(

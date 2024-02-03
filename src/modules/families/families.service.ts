@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { FamilyDefaultCostDto, FamilyDto } from './dto/create-families.dto';
 import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
 import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
+import { softDelete } from 'src/utils/softDelete';
 
 @Injectable()
 export class FamilyService {
@@ -30,17 +31,22 @@ export class FamilyService {
   ): Promise<PaginatorInterface<Family>> {
     const { page, limit, search, orderBy, order } = queryParams;
 
+    const query = {};
+
+    if (search) {
+      query['$or'] = [{ name: { $regex: search, $options: 'i' } }];
+    }
+
+    query['deletedAt'] = null;
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    return this.familyModel.paginate(
-      search ? { $or: [{ name: { $regex: search, $options: 'i' } }] } : {},
-      {
-        page,
-        limit,
-        sort: { [orderBy]: order },
-        populate: ['linkedFamily'],
-      },
-    );
+    return this.familyModel.paginate(query, {
+      page,
+      limit,
+      sort: { [orderBy]: order },
+      populate: ['linkedFamily'],
+    });
   }
 
   async findOne(id: string): Promise<Family> {
@@ -53,10 +59,7 @@ export class FamilyService {
   }
 
   async delete(id: string): Promise<Family> {
-    return this.familyModel.findOneAndDelete(
-      { _id: id },
-      { returnDocument: 'before' },
-    );
+    return softDelete(this.familyModel, id);
   }
 
   async updateDefaultCosts(

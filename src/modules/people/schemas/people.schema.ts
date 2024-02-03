@@ -35,6 +35,7 @@ export const PersonSchema = z.object({
       zipCode: z.string().optional(),
     })
     .optional(),
+  deletedAt: z.string().optional(),
 });
 
 const PersonSchemaZodMongoose = PersonSchema.mongoose({

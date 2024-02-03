@@ -6,6 +6,7 @@ import { PeopleDto } from './dto/create-people.dto';
 import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
 import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 import { generateCsvString } from 'src/utils/generateCsvString';
+import { softDelete } from 'src/utils/softDelete';
 
 @Injectable()
 export class PeopleService {
@@ -21,7 +22,7 @@ export class PeopleService {
   }
 
   async generateReport(): Promise<string> {
-    const data = await this.peopleModel.find();
+    const data = await this.peopleModel.find({ deletedAt: null });
 
     if (!data) {
       throw new Error('people not found.');
@@ -77,24 +78,25 @@ export class PeopleService {
   async paginate(queryParams: PaginatorDto) {
     const { limit, page, search, orderBy, order } = queryParams;
 
+    const query = {};
+
+    if (search) {
+      query['$or'] = [
+        { document: { $regex: search, $options: 'i' } },
+        { fantasyName: { $regex: search, $options: 'i' } },
+        { corporateName: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    query['deletedAt'] = null;
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    return this.peopleModel.paginate(
-      search
-        ? {
-            $or: [
-              { document: { $regex: search, $options: 'i' } },
-              { fantasyName: { $regex: search, $options: 'i' } },
-              { corporateName: { $regex: search, $options: 'i' } },
-            ],
-          }
-        : {},
-      {
-        page,
-        limit,
-        sort: { [orderBy]: order },
-      },
-    ) as Promise<PaginatorInterface<People>>;
+    return this.peopleModel.paginate(query, {
+      page,
+      limit,
+      sort: { [orderBy]: order },
+    }) as Promise<PaginatorInterface<People>>;
   }
 
   async findOne(id: string): Promise<People> {
@@ -102,9 +104,6 @@ export class PeopleService {
   }
 
   async delete(id: string): Promise<People> {
-    return this.peopleModel.findOneAndDelete(
-      { _id: id },
-      { returnDocument: 'before' },
-    );
+    return softDelete(this.peopleModel, id);
   }
 }

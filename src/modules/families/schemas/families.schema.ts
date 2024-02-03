@@ -18,6 +18,7 @@ export const FamilySchema = z.object({
     .refine((val) => mongoose.Types.ObjectId.isValid(val))
     .mongooseTypeOptions({ ref: 'FAMILY_MODEL' })
     .nullish(),
+  deletedAt: z.string().optional(),
 });
 
 const FamilySchemaZodMongoose = FamilySchema.mongoose({

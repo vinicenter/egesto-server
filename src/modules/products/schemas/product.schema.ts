@@ -76,6 +76,7 @@ export const ProductModelSchema = z.object({
     .refine((val) => mongoose.Types.ObjectId.isValid(val))
     .mongooseTypeOptions({ ref: 'BRAND_MODEL' })
     .nullish(),
+  deletedAt: z.string().optional(),
 });
 
 export const ProductSchema = ProductModelSchema.and(

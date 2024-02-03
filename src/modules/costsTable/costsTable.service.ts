@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { CostsTableDto } from './dto/create-costsTable.dto';
 import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
 import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
+import { softDelete } from 'src/utils/softDelete';
 
 @Injectable()
 export class CostsTableService {
@@ -28,32 +29,37 @@ export class CostsTableService {
   ): Promise<PaginatorInterface<CostsTable>> {
     const { page, limit, search, orderBy, order } = queryParams;
 
+    const query = {};
+
+    if (search) {
+      query['$or'] = [{ name: { $regex: search, $options: 'i' } }];
+    }
+
+    query['deletedAt'] = null;
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    return this.costsTableModel.paginate(
-      search ? { $or: [{ name: { $regex: search, $options: 'i' } }] } : {},
-      {
-        page,
-        limit,
-        sort: { [orderBy]: order },
-        populate: [
-          {
-            path: 'shipments',
-            populate: {
-              path: 'products',
-              populate: 'product',
-            },
+    return this.costsTableModel.paginate(query, {
+      page,
+      limit,
+      sort: { [orderBy]: order },
+      populate: [
+        {
+          path: 'shipments',
+          populate: {
+            path: 'products',
+            populate: 'product',
           },
-          {
-            path: 'shipments',
-            populate: {
-              path: 'families',
-              populate: 'family',
-            },
+        },
+        {
+          path: 'shipments',
+          populate: {
+            path: 'families',
+            populate: 'family',
           },
-        ],
-      },
-    );
+        },
+      ],
+    });
   }
 
   async findOne(id: string): Promise<CostsTable> {
@@ -79,9 +85,6 @@ export class CostsTableService {
   }
 
   async delete(id: string): Promise<CostsTable> {
-    return this.costsTableModel.findOneAndDelete(
-      { _id: id },
-      { returnDocument: 'before' },
-    );
+    return softDelete(this.costsTableModel, id);
   }
 }

@@ -6,6 +6,7 @@ export const BrandSchema = z.object({
   externalId: z.string().optional(),
   name: z.string(),
   description: z.string().optional(),
+  deletedAt: z.string().optional(),
 });
 
 const BrandSchemaZodMongoose = BrandSchema.mongoose({
