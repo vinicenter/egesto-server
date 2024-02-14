@@ -2,8 +2,11 @@ import { InjectTenancyModel } from '@needle-innovision/nestjs-tenancy';
 import { Injectable } from '@nestjs/common';
 import { Family, FamiliesDefaultCost } from './interfaces/families.interface';
 import { Model } from 'mongoose';
-import { FamilyDefaultCostDto, FamilyDto } from './dto/create-families.dto';
-import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
+import {
+  FamilyDefaultCostDto,
+  FamilyDto,
+  FamilyPaginateDto,
+} from './dto/create-families.dto';
 import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 import { softDelete } from 'src/utils/softDelete';
 
@@ -27,14 +30,27 @@ export class FamilyService {
   }
 
   async paginate(
-    queryParams: PaginatorDto,
+    queryParams: FamilyPaginateDto,
   ): Promise<PaginatorInterface<Family>> {
-    const { page, limit, search, orderBy, order } = queryParams;
+    const { page, limit, search, orderBy, order, familyType, mainFamily } =
+      queryParams;
 
     const query = {};
 
     if (search) {
       query['$or'] = [{ name: { $regex: search, $options: 'i' } }];
+    }
+
+    if (mainFamily) {
+      query['linkedFamily'] = mainFamily;
+    }
+
+    if (familyType === 'main') {
+      query['linkedFamily'] = null;
+    }
+
+    if (familyType === 'linked') {
+      query['linkedFamily'] = { $ne: null };
     }
 
     query['deletedAt'] = null;

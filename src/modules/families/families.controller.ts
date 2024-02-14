@@ -10,8 +10,11 @@ import {
 } from '@nestjs/common';
 import { FamilyService } from './families.service';
 import { Family } from './interfaces/families.interface';
-import { FamilyDefaultCostDto, FamilyDto } from './dto/create-families.dto';
-import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
+import {
+  FamilyDefaultCostDto,
+  FamilyDto,
+  FamilyPaginateDto,
+} from './dto/create-families.dto';
 import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 
 @Controller('families')
@@ -30,7 +33,7 @@ export class FamilyController {
 
   @Get()
   getAll(
-    @Query() queryParams: PaginatorDto,
+    @Query() queryParams: FamilyPaginateDto,
   ): Promise<PaginatorInterface<Family>> {
     return this.familyService.paginate(queryParams);
   }

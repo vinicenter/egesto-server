@@ -1,6 +1,16 @@
 import mongoose from 'mongoose';
 import { z } from 'nestjs-zod/z';
 import { toMongooseSchema } from 'mongoose-zod';
+import { PaginatorSchema } from 'src/utils/paginator/paginator.schema';
+
+export const FamilyPaginatorSchema = PaginatorSchema.and(
+  z
+    .object({
+      familyType: z.enum(['main', 'linked', 'all']).optional(),
+      mainFamily: z.string().optional(),
+    })
+    .optional(),
+);
 
 export const FamilySchema = z.object({
   externalId: z.string().optional(),
