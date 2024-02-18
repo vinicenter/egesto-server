@@ -41,16 +41,14 @@ export class FamilyService {
       query['$or'] = [{ name: { $regex: search, $options: 'i' } }];
     }
 
-    if (mainFamily) {
-      query['linkedFamily'] = mainFamily;
-    }
-
     if (familyType === 'main') {
       query['linkedFamily'] = null;
+    } else if (familyType === 'linked') {
+      query['linkedFamily'] = { $ne: null };
     }
 
-    if (familyType === 'linked') {
-      query['linkedFamily'] = { $ne: null };
+    if (mainFamily) {
+      query['linkedFamily'] = mainFamily;
     }
 
     query['deletedAt'] = null;
