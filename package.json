@@ -31,6 +31,7 @@
     "bcrypt": "^5.1.1",
     "csv": "^6.3.6",
     "csv-generate": "^4.3.1",
+    "dayjs": "^1.11.10",
     "mongoose": "^7.6.7",
     "mongoose-paginate-v2": "^1.7.4",
     "mongoose-zod": "^0.1.1",
