@@ -21,6 +21,11 @@ import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 export class BillsController {
   constructor(private readonly billService: BillService) {}
 
+  @Get('summary')
+  summary(@Query() queryParams: BillPaginatorDto) {
+    return this.billService.summary(queryParams);
+  }
+
   @Get()
   getAll(
     @Query() queryParams: BillPaginatorDto,
