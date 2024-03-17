@@ -11,6 +11,8 @@ import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 import { softDelete } from 'src/utils/softDelete';
 import * as dayjs from 'dayjs';
 import { billsQuery } from './utils/bills.utils';
+import { generateCsvString } from 'src/utils/generateCsvString';
+import { People } from '../people/interfaces/people.interface';
 
 @Injectable()
 export class BillService {
@@ -30,6 +32,48 @@ export class BillService {
       ...bill,
       dueDate: dayjs(bill.dueDate).toISOString(),
     });
+  }
+
+  async export(): Promise<string> {
+    const data = await this.billModel
+      .find({ deletedAt: null })
+      .populate(['recipient']);
+
+    if (!data) {
+      throw new Error('bills not found.');
+    }
+
+    type BillsExport = {
+      id: string;
+      vencimento: string;
+      recebedor: string;
+      tipo: string;
+      referencia: string;
+      valor: number;
+      observacoes: string;
+      status: string;
+    };
+
+    const csvData: BillsExport[] = [];
+
+    data.forEach((bill) => {
+      const billReport = bill as Bill;
+
+      const recepient = billReport.recipient as unknown as People;
+
+      csvData.push({
+        id: billReport._id,
+        vencimento: dayjs(billReport.dueDate).format('DD/MM/YYYY'),
+        tipo: billReport.type,
+        valor: billReport.amount,
+        recebedor: recepient?.corporateName,
+        referencia: billReport.reference,
+        observacoes: billReport.observations,
+        status: billReport.isPaid ? 'Pago' : 'Não pago',
+      });
+    });
+
+    return generateCsvString(csvData);
   }
 
   async summary(queryParams: BillPaginatorDto) {

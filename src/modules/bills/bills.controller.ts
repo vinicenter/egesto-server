@@ -26,6 +26,11 @@ export class BillsController {
     return this.billService.summary(queryParams);
   }
 
+  @Get('export')
+  export(): Promise<string> {
+    return this.billService.export();
+  }
+
   @Get()
   getAll(
     @Query() queryParams: BillPaginatorDto,
