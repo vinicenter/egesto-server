@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import type { Bill } from './interfaces/bills.interface';
 import {
+  BillCumulativeReportDto,
   BillPaginatorDto,
   CreateBillDto,
   UpdateBillDto,
@@ -20,6 +21,11 @@ import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 @Controller('bills')
 export class BillsController {
   constructor(private readonly billService: BillService) {}
+
+  @Get('cumulative')
+  cumulativeReport(@Query() queryParams: BillCumulativeReportDto) {
+    return this.billService.acccumulativeReport(queryParams);
+  }
 
   @Get('summary')
   summary(@Query() queryParams: BillPaginatorDto) {

@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { Bill } from './interfaces/bills.interface';
 import {
+  BillCumulativeReportDto,
   BillPaginatorDto,
   CreateBillDto,
   UpdateBillDto,
@@ -32,6 +33,65 @@ export class BillService {
       ...bill,
       dueDate: dayjs(bill.dueDate).toISOString(),
     });
+  }
+
+  async acccumulativeReport(queryParams: BillCumulativeReportDto) {
+    const startDateFormatted = dayjs(queryParams.startDate)
+      .startOf('day')
+      .toISOString();
+
+    const endDateFormatted = dayjs(queryParams.endDate)
+      .endOf('day')
+      .toISOString();
+
+    const bills = await this.billModel
+      .find({
+        dueDate: { $gte: startDateFormatted, $lte: endDateFormatted },
+        deletedAt: null,
+      })
+      .sort({ dueDate: 1 });
+
+    const valueAccumulativeByDay = bills.reduce<{
+      [date: string]: {
+        totalBills: number;
+        paid: number;
+        unpaid: number;
+        accumulativePaid: number;
+        accumulativeUnpaid: number;
+      };
+    }>((acc, bill) => {
+      const billDate = dayjs(bill.dueDate).format('YYYY-MM-DD');
+
+      const previousAcc = Object.values(acc)[Object.keys(acc).length - 1];
+
+      const paid = bill.isPaid
+        ? (acc[billDate]?.paid || 0) + bill.amount
+        : (acc[billDate]?.paid || 0) + 0;
+
+      const unpaid = !bill.isPaid
+        ? (acc[billDate]?.unpaid || 0) + bill.amount
+        : (acc[billDate]?.unpaid || 0) + 0;
+
+      const accumulativePaid = bill.isPaid
+        ? (previousAcc?.accumulativePaid || 0) + bill.amount
+        : (previousAcc?.accumulativePaid || 0) + 0;
+
+      const accumulativeUnpaid = !bill.isPaid
+        ? (previousAcc?.accumulativeUnpaid || 0) + bill.amount
+        : (previousAcc?.accumulativeUnpaid || 0) + 0;
+
+      acc[billDate] = {
+        totalBills: (acc[billDate]?.totalBills || 0) + 1,
+        paid,
+        unpaid,
+        accumulativePaid,
+        accumulativeUnpaid,
+      };
+
+      return acc;
+    }, {});
+
+    return valueAccumulativeByDay;
   }
 
   async export(): Promise<string> {

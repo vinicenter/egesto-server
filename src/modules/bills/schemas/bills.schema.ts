@@ -28,6 +28,11 @@ export const BillPaginatorSchema = PaginatorSchema.and(
   }),
 );
 
+export const BillCumulativeReportSchema = z.object({
+  startDate: z.string(),
+  endDate: z.string(),
+});
+
 export const BillSchema = z.object({
   dueDate: z.string(),
   recipient: z
