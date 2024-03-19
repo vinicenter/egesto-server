@@ -44,12 +44,16 @@ export class BillService {
       .endOf('day')
       .toISOString();
 
-    const bills = await this.billModel
-      .find({
-        dueDate: { $gte: startDateFormatted, $lte: endDateFormatted },
-        deletedAt: null,
-      })
-      .sort({ dueDate: 1 });
+    const query = {
+      dueDate: { $gte: startDateFormatted, $lte: endDateFormatted },
+      deletedAt: null,
+    };
+
+    if (queryParams.isPaid !== undefined) {
+      query['isPaid'] = queryParams.isPaid;
+    }
+
+    const bills = await this.billModel.find(query).sort({ dueDate: 1 });
 
     const valueAccumulativeByDay = bills.reduce<{
       [date: string]: {

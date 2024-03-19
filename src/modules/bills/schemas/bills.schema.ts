@@ -31,6 +31,14 @@ export const BillPaginatorSchema = PaginatorSchema.and(
 export const BillCumulativeReportSchema = z.object({
   startDate: z.string(),
   endDate: z.string(),
+  isPaid: z
+    .string()
+    .default('false')
+    .transform((value) => {
+      if (value === 'true') return true;
+      if (value === 'false') return false;
+      return undefined;
+    }),
 });
 
 export const BillSchema = z.object({
