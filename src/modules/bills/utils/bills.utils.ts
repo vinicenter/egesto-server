@@ -34,8 +34,8 @@ export const billsQuery = (queryParams: BillPaginatorDto) => {
     };
   }
 
-  if (queryParams.type) {
-    query['type'] = queryParams.type;
+  if (queryParams.paymentMethod) {
+    query['paymentMethod'] = queryParams.paymentMethod;
   }
 
   query['deletedAt'] = null;

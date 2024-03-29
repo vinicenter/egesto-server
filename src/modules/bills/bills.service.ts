@@ -111,7 +111,7 @@ export class BillService {
       id: string;
       vencimento: string;
       recebedor: string;
-      tipo: string;
+      'forma de pagamento': string;
       referencia: string;
       valor: number;
       observacoes: string;
@@ -128,7 +128,7 @@ export class BillService {
       csvData.push({
         id: billReport._id,
         vencimento: dayjs(billReport.dueDate).format('DD/MM/YYYY'),
-        tipo: billReport.type,
+        'forma de pagamento': billReport.paymentMethod,
         valor: billReport.amount,
         recebedor: recepient?.corporateName,
         referencia: billReport.reference,
