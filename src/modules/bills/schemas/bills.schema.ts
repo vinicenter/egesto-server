@@ -16,7 +16,8 @@ export const BillPaginatorSchema = PaginatorSchema.and(
     startDueDate: z.string().optional(),
     endDueDate: z.string().optional(),
     recipient: z.string().optional(),
-    paymentMethod: billPaymentMethodSchema.optional(),
+    paymentMethod: z.array(billPaymentMethodSchema).optional(),
+    tags: z.array(z.string()).optional(),
     isPaid: z
       .string()
       .default('false')
@@ -50,6 +51,15 @@ export const BillSchema = z.object({
     .nullish(),
   paymentMethod: billPaymentMethodSchema,
   reference: z.string().optional(),
+  tags: z
+    .array(
+      z
+        .string()
+        .refine((val) => mongoose.Types.ObjectId.isValid(val))
+        .mongooseTypeOptions({ ref: 'BILL_TAG_MODEL' })
+        .nullish(),
+    )
+    .optional(),
   amount: z.number(),
   observations: z.string().optional(),
   isPaid: z.boolean(),

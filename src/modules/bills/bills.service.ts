@@ -6,7 +6,9 @@ import {
   BillCumulativeReportDto,
   BillPaginatorDto,
   CreateBillDto,
+  CreateBillTagDto,
   UpdateBillDto,
+  UpdateBillTagDto,
 } from './dto/bills.dto';
 import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 import { softDelete } from 'src/utils/softDelete';
@@ -14,13 +16,54 @@ import * as dayjs from 'dayjs';
 import { billsQuery } from './utils/bills.utils';
 import { generateCsvString } from 'src/utils/generateCsvString';
 import { People } from '../people/interfaces/people.interface';
+import { BillTag } from './interfaces/billTags.interface';
+import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
 
 @Injectable()
 export class BillService {
   constructor(
     @InjectTenancyModel('BILL_MODEL')
     private readonly billModel: Model<Bill>,
+    @InjectTenancyModel('BILL_TAG_MODEL')
+    private readonly BillTagModel: Model<BillTag>,
   ) {}
+
+  async paginateTags(
+    queryParams: PaginatorDto,
+  ): Promise<PaginatorInterface<Bill>> {
+    const query = {};
+
+    if (queryParams.search) {
+      query['$or'] = [
+        { name: { $regex: queryParams.search, $options: 'i' } },
+        { description: { $regex: queryParams.search, $options: 'i' } },
+      ];
+    }
+
+    query['deletedAt'] = null;
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    return this.BillTagModel.paginate(query, {
+      page: queryParams.page,
+      limit: queryParams.limit,
+      sort: { title: 1 },
+    });
+  }
+
+  async createTag(BillTag: CreateBillTagDto): Promise<BillTag> {
+    return this.BillTagModel.create(BillTag);
+  }
+
+  async updateTag(id: string, BillTag: UpdateBillTagDto): Promise<BillTag> {
+    return this.BillTagModel.findOneAndUpdate({ _id: id }, BillTag, {
+      new: true,
+    });
+  }
+
+  async deleteTag(id: string): Promise<BillTag> {
+    return softDelete(this.BillTagModel, id);
+  }
 
   async update(id: string, bill: UpdateBillDto): Promise<Bill> {
     return this.billModel.findOneAndUpdate({ _id: id }, bill, {
@@ -35,7 +78,7 @@ export class BillService {
     });
   }
 
-  async acccumulativeReport(queryParams: BillCumulativeReportDto) {
+  async cumulativeReport(queryParams: BillCumulativeReportDto) {
     const startDateFormatted = dayjs(queryParams.startDate)
       .startOf('day')
       .toISOString();
@@ -179,12 +222,12 @@ export class BillService {
       page,
       limit,
       sort: { [orderBy]: order },
-      populate: ['recipient'],
+      populate: ['recipient', 'tags'],
     });
   }
 
   async findOne(id: string): Promise<Bill> {
-    return this.billModel.findById(id).populate('recipient');
+    return this.billModel.findById(id).populate(['recipient', 'tags']);
   }
 
   async delete(id: string): Promise<Bill> {

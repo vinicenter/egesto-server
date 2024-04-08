@@ -34,8 +34,12 @@ export const billsQuery = (queryParams: BillPaginatorDto) => {
     };
   }
 
-  if (queryParams.paymentMethod) {
-    query['paymentMethod'] = queryParams.paymentMethod;
+  if (queryParams.paymentMethod?.length) {
+    query['paymentMethod'] = { $in: queryParams.paymentMethod };
+  }
+
+  if (queryParams.tags?.length) {
+    query['tags'] = { $in: queryParams.tags };
   }
 
   query['deletedAt'] = null;
