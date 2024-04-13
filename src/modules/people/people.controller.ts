@@ -14,6 +14,7 @@ import { People } from './interfaces/people.interface';
 import { PeopleDto } from './dto/create-people.dto';
 import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
 import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
+import { ConsultCnpjData } from './types/consult-cnpj-data';
 
 @Controller('people')
 export class PeopleController {
@@ -24,6 +25,11 @@ export class PeopleController {
     @Query() queryParams: PaginatorDto,
   ): Promise<PaginatorInterface<People>> {
     return this.peopleService.paginate(queryParams);
+  }
+
+  @Get('consult-cnpj/:cnpj')
+  consultCnpj(@Param('cnpj') cnpj: string): Promise<ConsultCnpjData.Root> {
+    return this.peopleService.consultCnpjInReceitaWS(cnpj);
   }
 
   @Get('report')

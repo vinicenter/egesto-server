@@ -7,6 +7,8 @@ import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
 import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 import { generateCsvString } from 'src/utils/generateCsvString';
 import { softDelete } from 'src/utils/softDelete';
+import { formatCnpjCpf } from 'src/utils/formatters';
+import { ConsultCnpjData } from './types/consult-cnpj-data';
 
 @Injectable()
 export class PeopleService {
@@ -16,9 +18,23 @@ export class PeopleService {
   ) {}
 
   async update(id: string, people: PeopleDto): Promise<People> {
-    return this.peopleModel.findOneAndUpdate({ _id: id }, people, {
-      new: true,
-    });
+    return this.peopleModel.findOneAndUpdate(
+      { _id: id },
+      { ...people, document: formatCnpjCpf(people.document) },
+      {
+        new: true,
+      },
+    );
+  }
+
+  async consultCnpjInReceitaWS(cnpj: string): Promise<ConsultCnpjData.Root> {
+    const response = await fetch('https://receitaws.com.br/v1/cnpj/' + cnpj);
+
+    if (!response.ok) {
+      throw new Error('CNPJ not found.');
+    }
+
+    return response.json();
   }
 
   async generateReport(): Promise<string> {
@@ -72,7 +88,10 @@ export class PeopleService {
   }
 
   async create(people: PeopleDto): Promise<People> {
-    return this.peopleModel.create(people);
+    return this.peopleModel.create({
+      ...people,
+      document: formatCnpjCpf(people.document),
+    });
   }
 
   async paginate(queryParams: PaginatorDto) {
