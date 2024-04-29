@@ -40,16 +40,16 @@ export class PricesTableService {
       'Código do Produto': string;
       NCM: string;
       'Nome do Produto': string;
-      'Peso do Produto': number;
+      'Peso do Produto': string;
       Família: string;
       Subfamília: string;
-      Margem: number;
-      Frete: number;
-      Despesas: number;
-      'Custo do Produto': number;
-      Impostos: number;
-      'Perda de Produção': number;
-      'Preço de Venda': number;
+      Margem: string;
+      Frete: string;
+      Despesas: string;
+      'Custo do Produto': string;
+      Impostos: string;
+      'Perda de Produção': string;
+      'Preço de Venda': string;
     };
 
     if (!data) {
@@ -57,6 +57,14 @@ export class PricesTableService {
     }
 
     const csvData: PriceTableReport[] = [];
+
+    const formatToPtCurrency = (value: number) => {
+      return new Intl.NumberFormat('pt-BR', {
+        currency: 'BRL',
+        maximumFractionDigits: 5,
+        minimumFractionDigits: 5,
+      }).format(value);
+    };
 
     data.prices.forEach((price) => {
       const product = price.product as unknown as ProductModelType;
@@ -68,16 +76,16 @@ export class PricesTableService {
         'Código do Produto': product.code,
         NCM: product.taxes?.ncm,
         'Nome do Produto': product.name,
-        'Peso do Produto': product.unit?.weight,
+        'Peso do Produto': `${product.unit?.weight} ${product.UnitOfMeasurement}`,
         Família: linkedFamily?.name,
         Subfamília: family?.name,
-        Margem: price.margin,
-        Frete: price.shipment,
-        Despesas: price.expense,
-        'Custo do Produto': price.productCost,
-        Impostos: price.tax,
-        'Perda de Produção': product.production?.lost,
-        'Preço de Venda': price.price,
+        Margem: formatToPtCurrency(price.margin),
+        Frete: `${price.shipment}%`,
+        Despesas: `${price.expense}%`,
+        'Custo do Produto': formatToPtCurrency(price.productCost),
+        Impostos: `${price.tax}%`,
+        'Perda de Produção': `${product.production?.lost}%`,
+        'Preço de Venda': formatToPtCurrency(price.price),
       });
     });
 
