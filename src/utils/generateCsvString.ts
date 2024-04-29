@@ -5,7 +5,7 @@ export const generateCsvString = (csvData: Record<string, any>[]): string => {
 
   const headers = Object.keys(csvData[0]);
 
-  const csvHeaders = headers.join(',');
+  const csvHeaders = `"${headers.join('","')}"`;
 
   const csvRows = csvData.map((row) => {
     const values = Object.values(row);
