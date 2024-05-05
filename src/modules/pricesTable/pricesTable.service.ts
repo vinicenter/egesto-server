@@ -76,7 +76,9 @@ export class PricesTableService {
         'Código do Produto': product.code,
         NCM: product.taxes?.ncm,
         'Nome do Produto': product.name,
-        'Peso do Produto': `${product.unit?.weight} ${product.UnitOfMeasurement}`,
+        'Peso do Produto': `${product.unit?.weight} ${
+          product.UnitOfMeasurement || ''
+        }`,
         Família: linkedFamily?.name,
         Subfamília: family?.name,
         Margem: formatToPtCurrency(price.margin),
