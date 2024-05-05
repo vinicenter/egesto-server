@@ -11,27 +11,10 @@ const billPaymentMethodSchema = z.enum([
   'DINHEIRO',
 ]);
 
-export const BillPaginatorSchema = PaginatorSchema.and(
-  z.object({
-    startDueDate: z.string().optional(),
-    endDueDate: z.string().optional(),
-    recipient: z.string().optional(),
-    paymentMethod: z.array(billPaymentMethodSchema).optional(),
-    tags: z.array(z.string()).optional(),
-    isPaid: z
-      .string()
-      .default('false')
-      .transform((value) => {
-        if (value === 'true') return true;
-        if (value === 'false') return false;
-        return undefined;
-      }),
-  }),
-);
-
-export const BillCumulativeReportSchema = z.object({
-  startDate: z.string(),
-  endDate: z.string(),
+export const BillFilters = z.object({
+  recipient: z.string().optional(),
+  paymentMethod: z.array(billPaymentMethodSchema).optional(),
+  tags: z.array(z.string()).optional(),
   isPaid: z
     .string()
     .default('false')
@@ -41,6 +24,20 @@ export const BillCumulativeReportSchema = z.object({
       return undefined;
     }),
 });
+
+export const BillPaginatorSchema = PaginatorSchema.and(
+  z.object({
+    startDueDate: z.string().optional(),
+    endDueDate: z.string().optional(),
+  }),
+).and(BillFilters);
+
+export const BillCumulativeReportSchema = z
+  .object({
+    startDate: z.string(),
+    endDate: z.string(),
+  })
+  .and(BillFilters);
 
 export const BillSchema = z.object({
   dueDate: z.string(),

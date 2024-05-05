@@ -79,6 +79,8 @@ export class BillService {
   }
 
   async cumulativeReport(queryParams: BillCumulativeReportDto) {
+    const query = billsQuery(queryParams);
+
     const startDateFormatted = dayjs(queryParams.startDate)
       .startOf('day')
       .toISOString();
@@ -87,14 +89,7 @@ export class BillService {
       .endOf('day')
       .toISOString();
 
-    const query = {
-      dueDate: { $gte: startDateFormatted, $lte: endDateFormatted },
-      deletedAt: null,
-    };
-
-    if (queryParams.isPaid !== undefined) {
-      query['isPaid'] = queryParams.isPaid;
-    }
+    query['dueDate'] = { $gte: startDateFormatted, $lte: endDateFormatted };
 
     const bills = await this.billModel.find(query).sort({ dueDate: 1 });
 
