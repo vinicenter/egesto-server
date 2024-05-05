@@ -56,8 +56,8 @@ export class BillsController {
   }
 
   @Get('export')
-  export(): Promise<string> {
-    return this.billService.export();
+  export(@Query() queryParams: BillPaginatorDto): Promise<string> {
+    return this.billService.export(queryParams);
   }
 
   @Get()

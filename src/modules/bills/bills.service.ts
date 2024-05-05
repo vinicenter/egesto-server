@@ -136,10 +136,10 @@ export class BillService {
     return valueAccumulativeByDay;
   }
 
-  async export(): Promise<string> {
-    const data = await this.billModel
-      .find({ deletedAt: null })
-      .populate(['recipient']);
+  async export(queryParams: BillPaginatorDto): Promise<string> {
+    const query = billsQuery(queryParams);
+
+    const data = await this.billModel.find(query).populate(['recipient']);
 
     if (!data) {
       throw new Error('bills not found.');
