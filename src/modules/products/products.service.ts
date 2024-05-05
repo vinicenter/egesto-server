@@ -128,6 +128,7 @@ export class ProductService {
       familyId,
       feedstockId,
       onlyFeedstockEnabled,
+      withFamily,
       limit,
       page,
       search,
@@ -143,6 +144,10 @@ export class ProductService {
 
     if (onlyFeedstockEnabled) {
       query['production.canBeFeedstock'] = onlyFeedstockEnabled;
+    }
+
+    if (withFamily) {
+      query['family'] = { $ne: null };
     }
 
     if (brandId) {

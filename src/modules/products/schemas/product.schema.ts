@@ -96,6 +96,10 @@ export const ProductPaginatorSchema = PaginatorSchema.and(
     feedstockId: z.string().optional(),
     brandId: z.string().optional(),
     familyId: z.string().optional(),
+    withFamily: z
+      .string()
+      .optional()
+      .transform((value) => value === 'true'),
     onlyFeedstockEnabled: z
       .string()
       .optional()
