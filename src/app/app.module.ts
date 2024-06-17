@@ -14,15 +14,17 @@ import { ProdutModule } from 'src/modules/products/products.module';
 import { CostsTableModule } from 'src/modules/costsTable/costsTable.module';
 import { PricesTableModule } from 'src/modules/pricesTable/pricesTable.module';
 import { BillsModule } from 'src/modules/bills/bills.module';
+import { UploadModule } from 'src/modules/upload/upload.module';
 
 import { ZodValidationPipe } from 'nestjs-zod';
 import { APP_PIPE } from '@nestjs/core';
 import { TenancyModule } from '@needle-innovision/nestjs-tenancy';
+import { tenantIdentifier } from 'src/constants/general';
 
 @Module({
   imports: [
     TenancyModule.forRoot({
-      tenantIdentifier: 'x-tenant',
+      tenantIdentifier,
       options: () => null,
       uri: (tenantId: string) => {
         const uri = process.env.MONGO_URI + `/${tenantId}?authSource=admin`;
@@ -42,6 +44,7 @@ import { TenancyModule } from '@needle-innovision/nestjs-tenancy';
     CostsTableModule,
     PricesTableModule,
     BillsModule,
+    UploadModule,
     ConfigModule.forRoot(),
   ],
   controllers: [AppController],
