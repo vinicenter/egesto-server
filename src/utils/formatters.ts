@@ -1,3 +1,5 @@
+import { ProductModelType } from 'src/modules/products/interfaces/product.interface';
+
 export function formatCnpjCpf(value: string) {
   const cnpjCpf = value.replace(/\D/g, '');
 
@@ -10,3 +12,23 @@ export function formatCnpjCpf(value: string) {
     '$1.$2.$3/$4-$5',
   );
 }
+
+export function formatPrice(value: number) {
+  return new Intl.NumberFormat('pt-BR', {
+    currency: 'BRL',
+    maximumFractionDigits: 5,
+    minimumFractionDigits: 5,
+  }).format(value);
+}
+
+export const getProductUnitPrice = (
+  price: number,
+  product: ProductModelType,
+) => {
+  return (
+    price /
+    (product?.production?.useCustomPackCostMultiplier ||
+      product?.pack?.numberOfUnitsInPack ||
+      0)
+  );
+};

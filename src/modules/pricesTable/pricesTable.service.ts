@@ -11,6 +11,7 @@ import { generateCsvString } from 'src/utils/generateCsvString';
 import { PricesTablePaginateDto } from './dto/prices-table.dto';
 import { populateFormulation } from '../products/constants/product-population';
 import { softDelete } from 'src/utils/softDelete';
+import { formatPrice, getProductUnitPrice } from 'src/utils/formatters';
 
 @Injectable()
 export class PricesTableService {
@@ -49,6 +50,7 @@ export class PricesTableService {
       'Custo do Produto': string;
       Impostos: string;
       'Perda de Produção': string;
+      'Preço de Venda Unitário': string;
       'Preço de Venda': string;
     };
 
@@ -57,14 +59,6 @@ export class PricesTableService {
     }
 
     const csvData: PriceTableReport[] = [];
-
-    const formatToPtCurrency = (value: number) => {
-      return new Intl.NumberFormat('pt-BR', {
-        currency: 'BRL',
-        maximumFractionDigits: 5,
-        minimumFractionDigits: 5,
-      }).format(value);
-    };
 
     data.prices.forEach((price) => {
       const product = price.product as unknown as ProductModelType;
@@ -81,13 +75,16 @@ export class PricesTableService {
         }`,
         Família: linkedFamily?.name,
         Subfamília: family?.name,
-        Margem: formatToPtCurrency(price.margin),
+        Margem: formatPrice(price.margin),
         Frete: `${price.shipment}%`,
         Despesas: `${price.expense}%`,
-        'Custo do Produto': formatToPtCurrency(price.productCost),
+        'Custo do Produto': formatPrice(price.productCost),
         Impostos: `${price.tax}%`,
         'Perda de Produção': `${product.production?.lost}%`,
-        'Preço de Venda': formatToPtCurrency(price.price),
+        'Preço de Venda Unitário': formatPrice(
+          getProductUnitPrice(price.price, product),
+        ),
+        'Preço de Venda': formatPrice(price.price),
       });
     });
 
