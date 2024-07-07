@@ -13,8 +13,10 @@ import {
   BillCumulativeReportDto,
   BillPaginatorDto,
   CreateBillDto,
+  CreateBillInstallmentDto,
   CreateBillTagDto,
   UpdateBillDto,
+  UpdateBillInstallmentDto,
   UpdateBillTagDto,
 } from './dto/bills.dto';
 import { BillService } from './bills.service';
@@ -24,6 +26,34 @@ import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
 @Controller('bills')
 export class BillsController {
   constructor(private readonly billService: BillService) {}
+
+  @Get('installments/:id')
+  getInstallment(@Param('id') id: string) {
+    return this.billService.getInstallment(id);
+  }
+
+  @Get('installments')
+  getAllInstallments(@Query() queryParams: PaginatorDto) {
+    return this.billService.paginateInstallment(queryParams);
+  }
+
+  @Post('installments')
+  createInstallment(@Body() data: CreateBillInstallmentDto) {
+    return this.billService.createInstallment(data);
+  }
+
+  @Patch('installments/:id')
+  updateInstallment(
+    @Param('id') id: string,
+    @Body() data: UpdateBillInstallmentDto,
+  ) {
+    return this.billService.updateInstallment(id, data);
+  }
+
+  @Delete('installments/:id')
+  deleteInstallment(@Param('id') id: string) {
+    return this.billService.deleteInstallment(id);
+  }
 
   @Get('tags')
   getAllTags(@Query() queryParams: PaginatorDto) {
@@ -64,26 +94,26 @@ export class BillsController {
   getAll(
     @Query() queryParams: BillPaginatorDto,
   ): Promise<PaginatorInterface<Bill>> {
-    return this.billService.paginate(queryParams);
+    return this.billService.paginateBills(queryParams);
   }
 
   @Post()
   create(@Body() data: CreateBillDto): Promise<Bill> {
-    return this.billService.create(data);
+    return this.billService.createBill(data);
   }
 
   @Get(':id')
   get(@Param('id') id: string): Promise<Bill> {
-    return this.billService.findOne(id);
+    return this.billService.findOneBill(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() data: UpdateBillDto) {
-    return this.billService.update(id, data);
+    return this.billService.updateBill(id, data);
   }
 
   @Delete(':id')
   delete(@Param('id') id: string): Promise<Bill> {
-    return this.billService.delete(id);
+    return this.billService.deleteBill(id);
   }
 }

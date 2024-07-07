@@ -5,6 +5,7 @@ import {
   BillSchema,
 } from '../schemas/bills.schema';
 import { BillTagschema } from '../schemas/billTags.schema';
+import { BillInstallmentCreate } from '../schemas/billInstallment.schema';
 
 const updateBillSchema = BillSchema.partial().strip();
 
@@ -19,3 +20,10 @@ export class UpdateBillTagDto extends createZodDto(
   BillTagschema.partial().strip(),
 ) {}
 export class CreateBillTagDto extends createZodDto(BillTagschema) {}
+
+export class CreateBillInstallmentDto extends createZodDto(
+  BillInstallmentCreate,
+) {}
+export class UpdateBillInstallmentDto extends createZodDto(
+  BillInstallmentCreate,
+) {}

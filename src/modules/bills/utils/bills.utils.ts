@@ -19,6 +19,10 @@ export const billsQuery = (queryParams: BillPaginatorDto) => {
     query['isPaid'] = queryParams.isPaid;
   }
 
+  if (queryParams.installment) {
+    query['installment'] = queryParams.installment;
+  }
+
   if (queryParams.startDueDate && queryParams.endDueDate) {
     query['dueDate'] = {
       $gte: dayjs(queryParams.startDueDate).startOf('day').toISOString(),

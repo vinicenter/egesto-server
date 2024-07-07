@@ -3,7 +3,7 @@ import { z } from 'nestjs-zod/z';
 import { toMongooseSchema } from 'mongoose-zod';
 import { PaginatorSchema } from 'src/utils/paginator/paginator.schema';
 
-const billPaymentMethodSchema = z.enum([
+export const billPaymentMethodSchema = z.enum([
   'BOLETO',
   'CHEQUE',
   'PIX',
@@ -13,6 +13,7 @@ const billPaymentMethodSchema = z.enum([
 
 export const BillFilters = z.object({
   recipient: z.string().optional(),
+  installment: z.string().optional(),
   paymentMethod: z.array(billPaymentMethodSchema).optional(),
   tags: z.array(z.string()).optional(),
   isPaid: z
@@ -57,6 +58,11 @@ export const BillSchema = z.object({
         .nullish(),
     )
     .optional(),
+  installment: z
+    .string()
+    .refine((val) => mongoose.Types.ObjectId.isValid(val))
+    .mongooseTypeOptions({ ref: 'BILL_INSTALLMENT_MODEL' })
+    .nullish(),
   amount: z.number(),
   observations: z.string().optional(),
   isPaid: z.boolean(),
