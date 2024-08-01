@@ -43,7 +43,11 @@ export const billsQuery = (queryParams: BillPaginatorDto) => {
   }
 
   if (queryParams.tags?.length) {
-    query['tags'] = { $all: queryParams.tags };
+    if (queryParams.tagsFilterType === 'AND') {
+      query['tags'] = { $all: queryParams.tags };
+    } else {
+      query['tags'] = { $in: queryParams.tags };
+    }
   }
 
   query['deletedAt'] = null;

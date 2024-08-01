@@ -274,7 +274,9 @@ export class BillService {
   async export(queryParams: BillPaginatorDto): Promise<string> {
     const query = billsQuery(queryParams);
 
-    const data = await this.billModel.find(query).populate(['recipient']);
+    const data = await this.billModel
+      .find(query)
+      .populate(['recipient', 'tags', 'installment']);
 
     if (!data) {
       throw new Error('bills not found.');

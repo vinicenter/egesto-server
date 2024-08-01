@@ -16,6 +16,7 @@ export const BillFilters = z.object({
   installment: z.string().optional(),
   paymentMethod: z.array(billPaymentMethodSchema).optional(),
   tags: z.array(z.string()).optional(),
+  tagsFilterType: z.enum(['AND', 'OR']).default('OR'),
   isPaid: z
     .string()
     .default('false')
