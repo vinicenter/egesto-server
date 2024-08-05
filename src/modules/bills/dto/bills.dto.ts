@@ -1,6 +1,7 @@
 import { createZodDto } from 'nestjs-zod';
 import {
   BillCumulativeReportSchema,
+  BillDailyReportSchema,
   BillPaginatorSchema,
   BillSchema,
 } from '../schemas/bills.schema';
@@ -15,6 +16,7 @@ export class BillPaginatorDto extends createZodDto(BillPaginatorSchema) {}
 export class BillCumulativeReportDto extends createZodDto(
   BillCumulativeReportSchema,
 ) {}
+export class BillDailyReportDto extends createZodDto(BillDailyReportSchema) {}
 
 export class UpdateBillTagDto extends createZodDto(
   BillTagschema.partial().strip(),

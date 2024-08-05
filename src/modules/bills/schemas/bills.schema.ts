@@ -41,6 +41,13 @@ export const BillCumulativeReportSchema = z
   })
   .and(BillFilters);
 
+export const BillDailyReportSchema = z
+  .object({
+    startDate: z.string(),
+    endDate: z.string(),
+  })
+  .and(BillFilters);
+
 export const BillSchema = z.object({
   dueDate: z.string(),
   recipient: z

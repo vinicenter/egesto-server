@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { Bill } from './interfaces/bills.interface';
 import {
   BillCumulativeReportDto,
+  BillDailyReportDto,
   BillPaginatorDto,
   CreateBillDto,
   CreateBillInstallmentDto,
@@ -15,12 +16,13 @@ import {
 import { PaginatorInterface } from 'src/utils/paginator/paginator.interface';
 import { softDelete } from 'src/utils/softDelete';
 import * as dayjs from 'dayjs';
-import { billsQuery } from './utils/bills.utils';
+import { billsDailyReport, billsQuery } from './utils/bills.utils';
 import { generateCsvString } from 'src/utils/generateCsvString';
 import { People } from '../people/interfaces/people.interface';
 import { BillTag } from './interfaces/billTags.interface';
 import { PaginatorDto } from 'src/utils/paginator/paginator.dto';
 import { BillInstallment } from './interfaces/billInstallment.interface';
+import { formatPrice } from 'src/utils/formatters';
 
 @Injectable()
 export class BillService {
@@ -341,6 +343,33 @@ export class BillService {
       billsUnpaidAmount,
       billsAmount,
     };
+  }
+
+  async dailyReport(queryParams: BillDailyReportDto) {
+    return billsDailyReport(queryParams, this.billModel);
+  }
+
+  async dailyReportCsv(queryParams: BillDailyReportDto) {
+    const dailyReport = await this.dailyReport(queryParams);
+
+    const csvData = dailyReport.map((report) => {
+      const tags = report.values.reduce<Record<string, string>>(
+        (acc, value) => {
+          return {
+            ...acc,
+            [value.tag.name]: formatPrice(value.amount),
+          };
+        },
+        {},
+      );
+
+      return {
+        'Data de vencimento': dayjs(report.date).format('DD/MM/YYYY'),
+        ...tags,
+      };
+    });
+
+    return generateCsvString(csvData);
   }
 
   async cumulativeReport(queryParams: BillCumulativeReportDto) {

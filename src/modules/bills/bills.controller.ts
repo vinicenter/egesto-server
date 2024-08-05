@@ -11,6 +11,7 @@ import {
 import type { Bill } from './interfaces/bills.interface';
 import {
   BillCumulativeReportDto,
+  BillDailyReportDto,
   BillPaginatorDto,
   CreateBillDto,
   CreateBillInstallmentDto,
@@ -73,6 +74,16 @@ export class BillsController {
   @Delete('tags/:id')
   deleteTag(@Param('id') id: string) {
     return this.billService.deleteTag(id);
+  }
+
+  @Get('daily-report')
+  dailyReport(@Query() queryParams: BillDailyReportDto) {
+    return this.billService.dailyReport(queryParams);
+  }
+
+  @Get('daily-report-csv')
+  dailyReportCsv(@Query() queryParams: BillDailyReportDto): Promise<string> {
+    return this.billService.dailyReportCsv(queryParams);
   }
 
   @Get('cumulative')
